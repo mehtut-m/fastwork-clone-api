@@ -47,7 +47,7 @@ module.exports = {
       telephone_no: {
         type: Sequelize.DataTypes.INTEGER,
       },
-      data_of_birth: {
+      date_of_birth: {
         type: Sequelize.DataTypes.DATE,
       },
       profile_image: {
