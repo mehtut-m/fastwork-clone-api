@@ -37,7 +37,7 @@ exports.register = async (req, res, next) => {
         .status(400)
         .json({ message: "password and confirmPassword did not match" });
     }
-    if (email === "" || email.trim() === "") {
+    if (email === "" || email === undefined || email.trim() === "") {
       return res.status(400).json({ message: "email is require" });
     }
     const isEmail = emailFormat.test(email);
@@ -63,6 +63,53 @@ exports.register = async (req, res, next) => {
     res
       .status(201)
       .json({ message: "user created", firstName, lastName, email });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (email === "" || email === undefined || email.trim() === "") {
+      return res.status(400).json({ message: "email is require" });
+    }
+    const isEmail = emailFormat.test(email);
+    if (!isEmail) {
+      return res.status(400).json({ message: "invalid email" });
+    }
+    let user;
+    if (isEmail) {
+      user = await User.findOne({ where: { email } });
+      if (!user) {
+        return res.status(400).json({ message: "invalid email or password" });
+      }
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "invalid email or password" });
+    }
+    const payload = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
+      expiresIn: 60 * 60 * 24 * 30,
+    });
+    const { id, firstName, lastName, profileImg, role } = user;
+    res.status(200).json({
+      message: "welcome",
+      token,
+      user: {
+        id,
+        firstName,
+        lastName,
+        profileImg,
+        email,
+        role,
+      },
+    });
   } catch (err) {
     next(err);
   }
