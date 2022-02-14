@@ -131,7 +131,7 @@ exports.login = async (req, res, next) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
       expiresIn: 60 * 60 * 24 * 30,
     });
-    const { id, firstName, lastName, profileImg, role } = user;
+    const { id, firstName, lastName, profileImage, role } = user;
     res.status(200).json({
       message: "welcome",
       token,
@@ -139,7 +139,7 @@ exports.login = async (req, res, next) => {
         id,
         firstName,
         lastName,
-        profileImg,
+        profileImage,
         email,
         role,
       },
@@ -165,6 +165,8 @@ exports.signinWithGoogle = async (req, res, next) => {
         res.status(400).json({ message: "invalid google token" });
         next(err);
       });
+
+    console.log(ticket.payload);
 
     const {
       email_verified,
@@ -193,7 +195,7 @@ exports.signinWithGoogle = async (req, res, next) => {
       email,
       displayName: given_name,
       password: hashedPassword,
-      profileImg: picture,
+      profileImage: picture,
       googleId,
     };
 
@@ -239,7 +241,7 @@ exports.signinWithFB = async (req, res, next) => {
         last_name: lastName,
         email,
         picture: {
-          data: { url: profileImg },
+          data: { url: profileImage },
         },
       },
     } = await axios.get(
@@ -256,7 +258,7 @@ exports.signinWithFB = async (req, res, next) => {
       firstName,
       lastName,
       email,
-      profileImg,
+      profileImage,
       displayName: firstName,
       password: hashedPassword,
     };
