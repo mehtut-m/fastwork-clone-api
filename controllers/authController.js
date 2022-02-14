@@ -77,7 +77,7 @@ exports.register = async (req, res, next) => {
     }
 
     // Hasd password
-    const hasdedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
     await User.create({
       firstName,
       lastName,
@@ -152,9 +152,9 @@ exports.login = async (req, res, next) => {
 // Register with google account
 exports.signinWithGoogle = async (req, res, next) => {
   try {
-    const userId = req.body.userId;
     const idToken = req.body.tokenId;
 
+    console.log(idToken);
     // Verify google idToken
     const ticket = await client
       .verifyIdToken({
@@ -182,22 +182,29 @@ exports.signinWithGoogle = async (req, res, next) => {
         .json({ message: "Your Google account is not verified" });
     }
 
+    const hashedPassword = await bcrypt.hash(
+      email + process.env.JWT_SECRET_KEY,
+      12
+    );
+
     const defaultUser = {
       firstName: given_name,
       lastName: family_name,
       email,
+      displayName: given_name,
+      password: hashedPassword,
       profileImg: picture,
       googleId,
     };
 
-    // If google id is already next to login
-    const findGoogleId = await User.findOne({ where: { googleId } });
-    if (findGoogleId) {
-      next();
-    }
+    console.log(defaultUser);
 
-    // If new google account
-    const user = await User.create({ defaultUser });
+    // If google id is already next to login
+    let user = await User.findOne({ where: { googleId } });
+    if (!user) {
+      // If new google account
+      user = await User.create(defaultUser);
+    }
     req.user = user;
     next();
   } catch (err) {
@@ -239,16 +246,27 @@ exports.signinWithFB = async (req, res, next) => {
       `https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture&access_token=${response.data.access_token}`
     );
 
-    const defaultUser = { facebookId, firstName, lastName, email, profileImg };
+    const hashedPassword = await bcrypt.hash(
+      email + process.env.JWT_SECRET_KEY,
+      12
+    );
+
+    const defaultUser = {
+      facebookId,
+      firstName,
+      lastName,
+      email,
+      profileImg,
+      displayName: firstName,
+      password: hashedPassword,
+    };
 
     // If facebook id is already next to login
-    const findFBId = await User.findOnd({ where: { facebookId } });
-    if (findFBId) {
-      next();
+    const user = await User.findOnd({ where: { facebookId } });
+    if (!user) {
+      // If new facebook account
+      user = await User.create({ defaultUser });
     }
-
-    // If new facebook account
-    const user = await User.create({ defaultUser });
     req.user = user;
     next();
   } catch (err) {
