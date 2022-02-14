@@ -166,8 +166,6 @@ exports.signinWithGoogle = async (req, res, next) => {
         next(err);
       });
 
-    console.log(ticket.payload);
-
     const {
       email_verified,
       given_name,
@@ -199,7 +197,11 @@ exports.signinWithGoogle = async (req, res, next) => {
       googleId,
     };
 
-    console.log(defaultUser);
+    // If facebook email math google email
+    const isEmail = await User.findOne({ where: { email, googleId } });
+    if (!isEmail) {
+      return res.status(400).json({ message: "email is already in use" });
+    }
 
     // If google id is already next to login
     let user = await User.findOne({ where: { googleId } });
@@ -263,7 +265,11 @@ exports.signinWithFB = async (req, res, next) => {
       password: hashedPassword,
     };
 
-    // If facebook email is math google email
+    // If facebook email math google email
+    const isEmail = await User.findOne({ where: { email, facebookId } });
+    if (!isEmail) {
+      return res.status(400).json({ message: "email is already in use" });
+    }
 
     // If facebook id is already next to login
     let user = await User.findOne({ where: { facebookId } });
