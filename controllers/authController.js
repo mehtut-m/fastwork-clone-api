@@ -263,11 +263,13 @@ exports.signinWithFB = async (req, res, next) => {
       password: hashedPassword,
     };
 
+    // If facebook email is math google email
+
     // If facebook id is already next to login
-    const user = await User.findOnd({ where: { facebookId } });
+    let user = await User.findOne({ where: { facebookId } });
     if (!user) {
       // If new facebook account
-      user = await User.create({ defaultUser });
+      user = await User.create(defaultUser);
     }
     req.user = user;
     next();
