@@ -45,7 +45,12 @@ module.exports = {
         },
       },
       status: {
-        type: Sequelize.DataTypes.ENUM,
+        type: Sequelize.DataTypes.ENUM(
+          "PENDING",
+          "WORKING",
+          "REVIEW",
+          "COMPLETE"
+        ),
         allowNull: false,
       },
       payment_id: {

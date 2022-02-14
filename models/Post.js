@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
-    Post.belongsTo(models.Subcategories, {
+    Post.belongsTo(models.SubCategories, {
       foreignKey: {
         name: "subCategoryId",
         allowNull: false,

@@ -58,7 +58,7 @@ module.exports = {
         unique: true,
       },
       role: {
-        type: Sequelize.DataTypes.ENUM,
+        type: Sequelize.DataTypes.ENUM("USER", "FREELANCE", "ADMIN"),
       },
       created_at: {
         type: Sequelize.DataTypes.DATE,

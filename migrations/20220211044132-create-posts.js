@@ -45,7 +45,7 @@ module.exports = {
         type: Sequelize.DataTypes.TEXT,
       },
       status: {
-        type: Sequelize.DataTypes.ENUM,
+        type: Sequelize.DataTypes.ENUM("DRAFT", "SUBMIT", "REJECT", "APPROVE"),
         allowNull: false,
       },
       is_active: {
