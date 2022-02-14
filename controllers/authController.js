@@ -2,19 +2,20 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 
-// google authen import
+// Google authen import
 const { OAuth2Client, auth } = require("google-auth-library");
+const { default: axios } = require("axios");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// validate email format
+// Validate email format
 const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-// register with fastwork-clone
+// Register with fastwork-clone
 exports.register = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password, confirmPassword } = req.body;
 
-    // validate first name
+    // Validate first name
     if (
       firstName === "" ||
       firstName === undefined ||
@@ -23,17 +24,17 @@ exports.register = async (req, res, next) => {
       return res.status(400).json({ message: "first name is require" });
     }
 
-    // validate last name
+    // Validate last name
     if (lastName === "" || lastName === undefined || lastName.trim() === "") {
       return res.status(400).json({ message: "last name is require" });
     }
 
-    // validate password
+    // Validate password
     if (password === "" || password === undefined || password.trim() === "") {
       return res.status(400).json({ message: "password is require" });
     }
 
-    // validate confirm password
+    // Validate confirm password
     if (
       confirmPassword === "" ||
       confirmPassword === undefined ||
@@ -42,21 +43,21 @@ exports.register = async (req, res, next) => {
       return res.status(400).json({ message: "confirm password is require" });
     }
 
-    // validate length password
+    // Validate length password
     if (password.length < 6) {
       return res
         .status(400)
         .json({ message: "password must be at least 6 characters" });
     }
 
-    // check password and confirm password is math
+    // Check password and confirm password is math
     if (password !== confirmPassword) {
       return res
         .status(400)
         .json({ message: "password and confirmPassword did not match" });
     }
 
-    // validate email
+    // Validate email
     if (email === "" || email === undefined || email.trim() === "") {
       return res.status(400).json({ message: "email is require" });
     }
@@ -65,7 +66,7 @@ exports.register = async (req, res, next) => {
       return res.status(400).json({ message: "invalid email" });
     }
 
-    // check email in data base
+    // Check email in data base
     if (isEmail) {
       const emailAlready = await User.findOne({ where: { email } });
       if (emailAlready) {
@@ -75,7 +76,7 @@ exports.register = async (req, res, next) => {
       }
     }
 
-    // hasd password
+    // Hasd password
     const hasdedPassword = await bcrypt.hash(password, 12);
     await User.create({
       firstName,
@@ -92,12 +93,12 @@ exports.register = async (req, res, next) => {
   }
 };
 
-// login with fastwork-clone
+// Login with fastwork-clone
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // validate email
+    // Validate email
     if (email === "" || email === undefined || email.trim() === "") {
       return res.status(400).json({ message: "email is require" });
     }
@@ -106,7 +107,7 @@ exports.login = async (req, res, next) => {
       return res.status(400).json({ message: "invalid email" });
     }
 
-    // check user in data base
+    // Check user in data base
     let user;
     if (isEmail) {
       user = await User.findOne({ where: { email } });
@@ -115,13 +116,13 @@ exports.login = async (req, res, next) => {
       }
     }
 
-    // check password
+    // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: "invalid email or password" });
     }
 
-    // create token
+    // Create token
     const payload = {
       id: user.id,
       firstName: user.firstName,
@@ -148,13 +149,13 @@ exports.login = async (req, res, next) => {
   }
 };
 
-// register with google account
+// Register with google account
 exports.signinWithGoogle = async (req, res, next) => {
   try {
     const userId = req.body.userId;
     const idToken = req.body.tokenId;
 
-    // verify google idToken
+    // Verify google idToken
     const ticket = await client
       .verifyIdToken({
         idToken,
@@ -174,7 +175,7 @@ exports.signinWithGoogle = async (req, res, next) => {
       sub: googleId,
     } = ticket.payload;
 
-    // check email verified
+    // Check email verified
     if (!email_verified) {
       return res
         .status(400)
@@ -189,13 +190,64 @@ exports.signinWithGoogle = async (req, res, next) => {
       googleId,
     };
 
-    // if email is already next to login
-    const findEmail = await User.findOne({ where: { email } });
-    if (findEmail) {
+    // If google id is already next to login
+    const findGoogleId = await User.findOne({ where: { googleId } });
+    if (findGoogleId) {
       next();
     }
 
-    // if new google account
+    // If new google account
+    const user = await User.create({ defaultUser });
+    req.user = user;
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.signinWithFB = async (req, res, next) => {
+  try {
+    const { accessToken } = req.body;
+
+    const response = await axios
+      .get(
+        `https://graph.facebook.com/v12.0/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.env.FB_CLIENT_ID}&client_secret=${process.env.FB_SECRET_ID}&fb_exchange_token=${accessToken}`
+      )
+      .catch((err) => {
+        res.status(400).json({ message: "user not found" });
+      });
+
+    // If user not found
+    if (response.status !== 200) {
+      return res
+        .status(400)
+        .json({ message: "user not found or err has occurred" });
+    }
+
+    // Get user info from access token
+    const {
+      data: {
+        id: facebookId,
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        picture: {
+          data: { url: profileImg },
+        },
+      },
+    } = await axios.get(
+      `https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture&access_token=${response.data.access_token}`
+    );
+
+    const defaultUser = { facebookId, firstName, lastName, email, profileImg };
+
+    // If facebook id is already next to login
+    const findFBId = await User.findOnd({ where: { facebookId } });
+    if (findFBId) {
+      next();
+    }
+
+    // If new facebook account
     const user = await User.create({ defaultUser });
     req.user = user;
     next();

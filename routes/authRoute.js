@@ -3,18 +3,22 @@ const {
   register,
   login,
   signinWithGoogle,
+  signinWithFB,
 } = require("../controllers/authController");
 const { generateToken } = require("../middlewares/authenticate");
 
 const router = express.Router();
 
-// register with fastwork-clone
+// Register with fastwork-clone
 router.post("/register", register);
 
-//login with fastwork-clone
+// Login with fastwork-clone
 router.post("/login", login);
 
-//login with google
+// Login with google
 router.post("/login/google", signinWithGoogle, generateToken);
+
+// Login with facebook
+router.post("/login/fb", signinWithFB, generateToken);
 
 module.exports = router;
