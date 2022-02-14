@@ -2,7 +2,7 @@ require("dotenv").config();
 require("./config/passport");
 const express = require("express");
 const cors = require("cors");
-const userRoute = require("./routes/userRoute");
+const authRoute = require("./routes/authRoute");
 
 const app = express();
 
@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/static", express.static("public/images"));
 
-app.use("/users", userRoute);
+app.use("/auth", authRoute);
 
 app.use((req, res) => {
   res.status(400).json("Resource not found on this server");
