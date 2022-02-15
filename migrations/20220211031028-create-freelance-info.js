@@ -76,6 +76,10 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
+      status: {
+        type: Sequelize.DataTypes.ENUM("PENDING", "SUBMIT", "APROVE", "REJECT"),
+        allowNull: false,
+      },
       created_at: {
         type: Sequelize.DataTypes.DATE,
       },
