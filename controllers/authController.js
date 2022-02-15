@@ -2,44 +2,36 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models");
 
-// Google authen import
+// TODO: Google authen import
 const { OAuth2Client, auth } = require("google-auth-library");
 const { default: axios } = require("axios");
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
-// Validate email format
+// TODO: Validate email format
 const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-// Register with fastwork-clone
+// TODO: Register with fastwork-clone
 exports.register = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password, confirmPassword } = req.body;
 
     // Validate first name
-    if (
-      firstName === "" ||
-      firstName === undefined ||
-      firstName.trim() === ""
-    ) {
+    if (typeof firstName !== "string" || firstName.trim() === "") {
       return res.status(400).json({ message: "first name is require" });
     }
 
     // Validate last name
-    if (lastName === "" || lastName === undefined || lastName.trim() === "") {
+    if (typeof lastName !== "string" || lastName.trim() === "") {
       return res.status(400).json({ message: "last name is require" });
     }
 
     // Validate password
-    if (password === "" || password === undefined || password.trim() === "") {
+    if (typeof password !== "string" || password.trim() === "") {
       return res.status(400).json({ message: "password is require" });
     }
 
     // Validate confirm password
-    if (
-      confirmPassword === "" ||
-      confirmPassword === undefined ||
-      confirmPassword.trim() === ""
-    ) {
+    if (typeof confirmPassword !== "string" || confirmPassword.trim() === "") {
       return res.status(400).json({ message: "confirm password is require" });
     }
 
@@ -58,7 +50,7 @@ exports.register = async (req, res, next) => {
     }
 
     // Validate email
-    if (email === "" || email === undefined || email.trim() === "") {
+    if (typeof email !== "string" || email.trim() === "") {
       return res.status(400).json({ message: "email is require" });
     }
     const isEmail = emailFormat.test(email);
@@ -82,8 +74,7 @@ exports.register = async (req, res, next) => {
       firstName,
       lastName,
       email,
-      displayName: firstName,
-      password: hasdedPassword,
+      password: hashedPassword,
     });
     res
       .status(201)
@@ -93,13 +84,13 @@ exports.register = async (req, res, next) => {
   }
 };
 
-// Login with fastwork-clone
+// TODO: Login with fastwork-clone
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
     // Validate email
-    if (email === "" || email === undefined || email.trim() === "") {
+    if (typeof email !== "string" || email.trim() === "") {
       return res.status(400).json({ message: "email is require" });
     }
     const isEmail = emailFormat.test(email);
@@ -149,7 +140,7 @@ exports.login = async (req, res, next) => {
   }
 };
 
-// Register with google account
+// TODO: Register with google account
 exports.signinWithGoogle = async (req, res, next) => {
   try {
     const idToken = req.body.tokenId;
@@ -191,7 +182,6 @@ exports.signinWithGoogle = async (req, res, next) => {
       firstName: given_name,
       lastName: family_name,
       email,
-      displayName: given_name,
       password: hashedPassword,
       profileImage: picture,
       googleId,
@@ -216,6 +206,7 @@ exports.signinWithGoogle = async (req, res, next) => {
   }
 };
 
+// TODO: Login with facebook
 exports.signinWithFB = async (req, res, next) => {
   try {
     const { accessToken } = req.body;
@@ -261,7 +252,6 @@ exports.signinWithFB = async (req, res, next) => {
       lastName,
       email,
       profileImage,
-      displayName: firstName,
       password: hashedPassword,
     };
 

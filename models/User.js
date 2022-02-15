@@ -30,17 +30,10 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      displayName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       facebookId: {
         type: DataTypes.STRING,
       },
       googleId: {
-        type: DataTypes.STRING,
-      },
-      profileDesc: {
         type: DataTypes.STRING,
       },
       telephoneNo: {

@@ -31,17 +31,10 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
-      display_name: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-      },
       facebook_id: {
         type: Sequelize.DataTypes.STRING,
       },
       google_id: {
-        type: Sequelize.DataTypes.STRING,
-      },
-      profile_desc: {
         type: Sequelize.DataTypes.STRING,
       },
       telephone_no: {

@@ -24,6 +24,21 @@ module.exports = {
           key: "id",
         },
       },
+      first_name: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      last_name: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      display_name: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      profile_desc: {
+        type: Sequelize.DataTypes.STRING,
+      },
       citizen_card_no: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
