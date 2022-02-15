@@ -19,7 +19,6 @@ module.exports = {
         email: "Jill@gmail.com",
         password: bcrypt.hashSync("Jillpass", 12),
         role: "USER",
-        display_name: "Jill",
       },
       {
         first_name: "Bella",
@@ -27,7 +26,6 @@ module.exports = {
         email: "Bella@gmail.com",
         password: bcrypt.hashSync("Bellapass", 12),
         role: "USER",
-        display_name: "Bella",
       },
       {
         first_name: "Sage",
@@ -35,7 +33,6 @@ module.exports = {
         email: "Sage@gmail.com",
         password: bcrypt.hashSync("Sagepass", 12),
         role: "USER",
-        display_name: "Sage",
       },
       {
         first_name: "Josy",
@@ -43,7 +40,6 @@ module.exports = {
         email: "Josy@gmail.com",
         password: bcrypt.hashSync("Josypass", 12),
         role: "USER",
-        display_name: "Josy",
       },
       {
         first_name: "Maya",
@@ -51,7 +47,6 @@ module.exports = {
         email: "Maya@gmail.com",
         password: bcrypt.hashSync("Mayapass", 12),
         role: "USER",
-        display_name: "Maya",
       },
     ]);
   },
