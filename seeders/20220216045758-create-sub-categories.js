@@ -14,27 +14,42 @@ module.exports = {
     return await queryInterface.bulkInsert("sub_categories", [
       {
         category_id: "1",
-        name: "Logo Design ดีไซน์ให้ตรงใจ",
+        name: "Logo",
         image: null,
       },
       {
         category_id: "1",
-        name: "Logo HOUSE บ้านหลังใหญ่",
+        name: "วาดภาพประกอบ",
+        image: null,
+      },
+      {
+        category_id: "1",
+        name: "ออกแบบ Character & Mascot",
+        image: null,
+      },
+      {
+        category_id: "1",
+        name: "Banner โฆษณา",
+        image: null,
+      },
+      {
+        category_id: "1",
+        name: "วาดแฟนอาร์ต",
         image: null,
       },
       {
         category_id: "5",
-        name: "รับทำ Landing Page",
+        name: "Web Development",
         image: null,
       },
       {
         category_id: "5",
-        name: "รับทำ WEBSITE",
+        name: "Wordpress",
         image: null,
       },
       {
         category_id: "5",
-        name: "รับทำ Web Application รองรับ Responsive",
+        name: "Mobile Application",
         image: null,
       },
     ]);
