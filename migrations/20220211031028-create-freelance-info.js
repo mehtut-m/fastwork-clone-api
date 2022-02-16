@@ -49,7 +49,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: "address",
+            tableName: "addresses",
           },
           key: "id",
         },
@@ -59,7 +59,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: "address",
+            tableName: "addresses",
           },
           key: "id",
         },
@@ -92,7 +92,12 @@ module.exports = {
         allowNull: false,
       },
       status: {
-        type: Sequelize.DataTypes.ENUM("PENDING", "SUBMIT", "APROVE", "REJECT"),
+        type: Sequelize.DataTypes.ENUM(
+          "PENDING",
+          "SUBMIT",
+          "APPROVE",
+          "REJECT"
+        ),
         allowNull: false,
       },
       created_at: {

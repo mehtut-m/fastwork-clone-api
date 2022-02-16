@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM("PENDING", "SUBMIT", "APROVE", "REJECT"),
+        type: DataTypes.ENUM("PENDING", "SUBMIT", "APPROVE", "REJECT"),
         defaultValue: "PENDING",
       },
     },

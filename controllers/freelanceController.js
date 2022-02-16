@@ -164,14 +164,10 @@ exports.registerFreelance = async (req, res, next) => {
       { transaction }
     );
 
-    console.log(currentAddressId);
-
     // ? Check citizen image
     if (!req.files) {
       return res.status(400).json({ message: "image is require" });
     }
-
-    // console.log(req.files.cardImage[0].path);
 
     const imageWithCard = await uploadPromise(req.files.imageWithCard[0].path);
     fs.unlinkSync(req.files.imageWithCard[0].path);
@@ -218,12 +214,12 @@ exports.registerFreelance = async (req, res, next) => {
 
     // * Create freelance
 
-    console.log("image with carad =====>", imageWithCard.secure_url);
-    const freelance = await FreelanceInfo.create(
+    await FreelanceInfo.create(
       {
         userId: req.user.id,
         firstName,
         lastName,
+        profileDesc,
         displayName,
         citizenCardNo,
         citizenAddressId,
