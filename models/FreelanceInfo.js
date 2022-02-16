@@ -2,8 +2,29 @@ module.exports = (sequelize, DataTypes) => {
   const FreelanceInfo = sequelize.define(
     "FreelanceInfo",
     {
+      displayName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      profileDesc: {
+        type: DataTypes.STRING,
+      },
       citizenCardNo: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: true,
@@ -21,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      bankAccointImage: {
+      bankAccountImage: {
         type: DataTypes.STRING,
         allowNull: false,
       },

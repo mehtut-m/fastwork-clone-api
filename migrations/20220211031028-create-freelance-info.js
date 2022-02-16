@@ -8,7 +8,7 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.createTable("freelance-info", {
+    await queryInterface.createTable("freelance_infos", {
       id: {
         type: Sequelize.DataTypes.INTEGER,
         primaryKey: true,
@@ -24,8 +24,23 @@ module.exports = {
           key: "id",
         },
       },
+      first_name: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      last_name: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      display_name: {
+        type: Sequelize.DataTypes.STRING,
+        allowNull: false,
+      },
+      profile_desc: {
+        type: Sequelize.DataTypes.STRING,
+      },
       citizen_card_no: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
         unique: true,
       },
@@ -96,6 +111,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable("freelance-info");
+    await queryInterface.dropTable("freelance_infos");
   },
 };
