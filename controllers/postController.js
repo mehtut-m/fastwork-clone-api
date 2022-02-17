@@ -1,7 +1,13 @@
 const fs = require("fs");
 const util = require("util");
 const cloudinary = require("cloudinary").v2;
-const { SubCategories, Post, PostImage } = require("../models");
+const {
+  SubCategories,
+  Post,
+  PostImage,
+  Package,
+  sequelize,
+} = require("../models");
 const validator = require("validator");
 
 // TODO: Function upload image to cloudinary
@@ -13,6 +19,16 @@ const isValidName = (item) => {
     (typeof item === "string" && validator.isAlphanumeric(item)) ||
     /^[ก-๙]+$/gi.test(item)
   );
+};
+
+// TODO: Function validate special character
+const isValidNameSpecial = (item) => {
+  return typeof item === "string" && /^[^<>%$]*$/.test(item);
+};
+
+// TODO: Function validate date
+const isValidDate = (date) => {
+  return typeof date === "string" && validator.isDate(date);
 };
 
 // TODO: Select category and sub category (Step 1)
@@ -28,16 +44,20 @@ exports.selectCategory = async (req, res, next) => {
       return res.status(400).json({ message: "sub category id not found" });
     }
 
-    const post = await findOne({ where: { id: postId } });
-
-    if (!post) {
-      post.create({ userId: req.user.id, subCategoryId });
-      res.status(201).json({ message: "post create with status DRAFT", post });
-    }
-
-    if (post) {
+    // ? Find post
+    if (postId) {
+      // ! ควรแยก nedpoint?
+      const post = await Post.findOne({ where: { id: postId } });
+      // * Update post
       post.update({ subCategoryId });
       res.status(201).json({ message: "post update with status DRAFT", post });
+    }
+
+    if (!postId) {
+      // ! ควรแยก nedpoint?
+      // * Create post
+      Post.create({ userId: req.user.id, subCategoryId });
+      res.status(201).json({ message: "post create with status DRAFT" });
     }
   } catch (err) {
     next(err);
@@ -49,19 +69,8 @@ exports.addNameAndDescription = async (req, res, next) => {
   try {
     const { postId, name, description } = req.body;
 
-    // ? Validate name
-    if (!isValidName(name)) {
-      return res
-        .status(400)
-        .json({ message: "name contains only letters (a-zA-Z0-9) and (ก-๙)" });
-    }
-
-    // ? Validate description
-    if (!isValidName(description)) {
-      return res.status(400).json({
-        message: "description contains only letters (a-zA-Z0-9) and (ก-๙)",
-      });
-    }
+    console.log(name);
+    console.log(typeof name);
 
     // ? Select post for add name and description
     const post = await Post.findOne({ where: { id: postId } });
@@ -69,7 +78,21 @@ exports.addNameAndDescription = async (req, res, next) => {
       return res.status(400).json({ message: "post id not found" });
     }
 
-    // ? Update Post
+    // ? Validate name
+    if (name.length < 10) {
+      return res.status(400).json({
+        message: "name must be at least 10 characters",
+      });
+    }
+
+    // ? Validate description
+    if (description.length < 10) {
+      return res.status(400).json({
+        message: "description must be at least 10 characters",
+      });
+    }
+
+    // * Update Post
     post.update({ name, description });
     res.status(200).json({ message: "Add name and description", post });
   } catch (err) {
@@ -83,7 +106,7 @@ exports.addImage = async (req, res, next) => {
   try {
     const { postId } = req.body;
 
-    // ? Select post for add name and description
+    // ? Select post for add image
     const post = await Post.findOne({ where: { id: postId } }, { transaction });
     if (!post) {
       return res.status(400).json({ message: "post id not found" });
@@ -92,7 +115,7 @@ exports.addImage = async (req, res, next) => {
     let result = {};
     let tmp = [];
 
-    // ? Upload image to cloudinary
+    // * Upload image to cloudinary
     if (req.files) {
       for (const file of req.files) {
         const { path } = file;
@@ -120,22 +143,83 @@ exports.addImage = async (req, res, next) => {
 // TODO: Add instruction (Step 4)
 exports.addInstruction = async (req, res, next) => {
   try {
-    const { postId, instruction } = req.body;
+    const { postId, instructions } = req.body;
 
-    // ? Select post for add name and description
-    const post = await Post.findOne({ where: { id: postId } }, { transaction });
+    // ? Select post for add instruction
+    const post = await Post.findOne({ where: { id: postId } });
     if (!post) {
       return res.status(400).json({ message: "post id not found" });
     }
 
-    if (!validator(instruction)) {
+    // ? Validate instructions
+    if (instructions.length > 10) {
       return res.status(400).json({
-        message: "instruction contains only letters (a-zA-Z0-9) and (ก-๙)",
+        message: "maximum steps of instructions equal 10",
       });
     }
 
-    post.update({ instruction });
+    const instruction = instructions.filter(
+      (item) => typeof item === "string" && item.length > 1
+    );
+
+    const convert = JSON.stringify(instruction);
+    // * Update post
+    post.update({ instruction: convert });
     res.status(200).json({ message: "Add instruction", post });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// TODO: Add package (Step 5)
+exports.addPackage = async (req, res, next) => {
+  try {
+    const { postId, packages } = req.body;
+
+    // ? Select post for add package
+    const post = await Post.findOne({ where: { id: postId } });
+    if (!post) {
+      return res.status(400).json({ message: "post id not found" });
+    }
+
+    // ? Validate if packages > 3
+    let result = [];
+    if (packages.length > 3) {
+      return res.status(400).json({ message: "maximum packages equal 3" });
+    }
+
+    if (packages) {
+      for (const package of packages) {
+        const { name, description, price, duration } = package;
+
+        // ? Validate description
+        if (description.length < 10) {
+          return res.status(400).json({
+            message: "description must be at least 10 characters",
+          });
+        }
+
+        // ? Validate price
+        if (typeof price !== "string" || price.trim() === "") {
+          return res.status(400).json({ message: "invalid price" });
+        }
+
+        //? Validate duration
+        if (typeof duration !== "string" || duration.trim() === "") {
+          return res.status(400).json({ message: "invalid duration" });
+        }
+
+        const createPackage = await Package.create({
+          postId,
+          name,
+          description,
+          price,
+          duration,
+        });
+        result.push(createPackage);
+      }
+    }
+    res.status(201).json({ message: "create package success", result });
   } catch (err) {
     next(err);
   }
