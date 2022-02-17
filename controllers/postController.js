@@ -211,7 +211,7 @@ exports.addPackage = async (req, res, next) => {
 
         const createPackage = await Package.create({
           postId,
-          name,
+          name: name ?? null,
           description,
           price,
           duration,
