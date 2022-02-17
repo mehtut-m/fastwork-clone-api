@@ -1,5 +1,6 @@
 const { Categories, SubCategories } = require("../models");
 
+// TODO: Find all categories
 exports.getAllCategories = async (req, res, next) => {
   try {
     const categories = await Categories.findAll({
