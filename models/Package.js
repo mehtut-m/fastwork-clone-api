@@ -10,14 +10,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       price: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       duration: {
-        type: DataTypes.DATE,
-        validate: {
-          isDate: true,
-        },
+        type: DataTypes.INTEGER,
       },
     },
     {

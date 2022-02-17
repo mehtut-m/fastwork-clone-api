@@ -32,11 +32,11 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
       },
       price: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
       },
       duration: {
-        type: Sequelize.DataTypes.DATE,
+        type: Sequelize.DataTypes.INTEGER,
       },
       created_at: {
         type: Sequelize.DataTypes.DATE,
