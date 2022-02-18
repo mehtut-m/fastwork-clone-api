@@ -44,10 +44,11 @@ exports.selectCategory = async (req, res, next) => {
       return res.status(400).json({ message: "sub category id not found" });
     }
 
+    let post;
     // ? Find post
     if (postId) {
       // ! ควรแยก nedpoint?
-      const post = await Post.findOne({ where: { id: postId } });
+      post = await Post.findOne({ where: { id: postId } });
       // * Update post
       post.update({ subCategoryId });
       res.status(201).json({ message: "post update with status DRAFT", post });
@@ -56,8 +57,8 @@ exports.selectCategory = async (req, res, next) => {
     if (!postId) {
       // ! ควรแยก nedpoint?
       // * Create post
-      Post.create({ userId: req.user.id, subCategoryId });
-      res.status(201).json({ message: "post create with status DRAFT" });
+      post = await Post.create({ userId: req.user.id, subCategoryId });
+      res.status(201).json({ message: "post create with status DRAFT", post });
     }
   } catch (err) {
     next(err);
