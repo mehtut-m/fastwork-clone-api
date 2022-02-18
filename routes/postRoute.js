@@ -16,6 +16,7 @@ const router = express.Router();
 // TODO: Get all post
 router.get("/", getAllPost);
 
+// TODO: Get post by id
 router.get("/:id", getPostById);
 
 // TODO: Select category and sub category
