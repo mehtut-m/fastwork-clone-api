@@ -7,6 +7,12 @@ const {
   PostImage,
   Package,
   sequelize,
+  FreelanceInfo,
+  Categories,
+  subCategories,
+  User,
+  Address,
+  Bank,
 } = require("../models");
 const validator = require("validator");
 
@@ -29,6 +35,130 @@ const isValidNameSpecial = (item) => {
 // TODO: Function validate date
 const isValidDate = (date) => {
   return typeof date === "string" && validator.isDate(date);
+};
+
+// TODO: Get all post
+exports.getAllPost = async (req, res, next) => {
+  try {
+    const posts = await Post.findAll({
+      where: {},
+      include: [
+        {
+          model: User,
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "telephoneNo",
+            "dateOfBirth",
+            "profileImage",
+          ],
+          include: {
+            model: FreelanceInfo,
+            attributes: {
+              exclude: [
+                "citizenCardNo",
+                "imageWithCard",
+                "cardImage",
+                "bankAccountNo",
+                "bankAccountImage",
+              ],
+            },
+            include: [
+              {
+                as: "citizenAddress",
+                model: Address,
+              },
+              {
+                as: "currentAddress",
+                model: Address,
+              },
+              {
+                model: Bank,
+              },
+            ],
+          },
+        },
+        {
+          model: PostImage,
+        },
+        {
+          model: Package,
+        },
+      ],
+    });
+    res.status(200).json(posts);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// TODO: Get post by id
+exports.getPostById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // ? Validate post id
+    if (typeof id !== "string" || id.trim() === "") {
+      return res.status(400).json({ message: "post id is require" });
+    }
+    const post = await Post.findOne({
+      where: { id },
+      include: [
+        {
+          model: User,
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "telephoneNo",
+            "dateOfBirth",
+            "profileImage",
+          ],
+          include: {
+            model: FreelanceInfo,
+            attributes: {
+              exclude: [
+                "citizenCardNo",
+                "imageWithCard",
+                "cardImage",
+                "bankAccountNo",
+                "bankAccountImage",
+              ],
+            },
+            include: [
+              {
+                as: "citizenAddress",
+                model: Address,
+              },
+              {
+                as: "currentAddress",
+                model: Address,
+              },
+              {
+                model: Bank,
+              },
+            ],
+          },
+        },
+        {
+          model: PostImage,
+        },
+        {
+          model: Package,
+        },
+      ],
+    });
+
+    // ? Validate post
+    if (!post) {
+      return res.status(400).json({ message: "post not found" });
+    }
+
+    res.status(200).json({ post });
+  } catch (err) {
+    next(err);
+  }
 };
 
 // TODO: Select category and sub category (Step 1)

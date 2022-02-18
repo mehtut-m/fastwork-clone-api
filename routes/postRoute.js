@@ -2,14 +2,21 @@ const express = require("express");
 const authenticate = require("../middlewares/authenticate");
 const upload = require("../middlewares/upload");
 const {
+  getAllPost,
   selectCategory,
   addNameAndDescription,
   addImage,
   addInstruction,
   addPackage,
+  getPostById,
 } = require("../controllers/postController");
 
 const router = express.Router();
+
+// TODO: Get all post
+router.get("/", getAllPost);
+
+router.get("/:id", getPostById);
 
 // TODO: Select category and sub category
 router.post("/category", authenticate, selectCategory);
