@@ -19,7 +19,7 @@ app.use("/categories", categoriesRoute);
 app.use("/post", postRoute);
 
 app.use((req, res) => {
-  res.status(400).json("Resource not found on this server");
+  res.status(404).json("Resource not found on this server");
 });
 
 app.use((err, req, res, next) => {
