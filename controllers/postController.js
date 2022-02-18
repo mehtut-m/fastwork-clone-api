@@ -70,8 +70,10 @@ exports.addNameAndDescription = async (req, res, next) => {
   try {
     const { postId, name, description } = req.body;
 
-    console.log(name);
-    console.log(typeof name);
+    // ? Validate post id
+    if (typeof postId !== "string" || postId.trim() === "") {
+      return res.status(400).json({ message: "post id is require" });
+    }
 
     // ? Select post for add name and description
     const post = await Post.findOne({ where: { id: postId } });
@@ -106,6 +108,11 @@ exports.addImage = async (req, res, next) => {
   const transaction = await sequelize.transaction();
   try {
     const { postId } = req.body;
+
+    // ? Validate post id
+    if (typeof postId !== "string" || postId.trim() === "") {
+      return res.status(400).json({ message: "post id is require" });
+    }
 
     // ? Select post for add image
     const post = await Post.findOne({ where: { id: postId } }, { transaction });
@@ -146,6 +153,11 @@ exports.addInstruction = async (req, res, next) => {
   try {
     const { postId, instructions } = req.body;
 
+    // ? Validate post id
+    if (typeof postId !== "string" || postId.trim() === "") {
+      return res.status(400).json({ message: "post id is require" });
+    }
+
     // ? Select post for add instruction
     const post = await Post.findOne({ where: { id: postId } });
     if (!post) {
@@ -176,6 +188,11 @@ exports.addInstruction = async (req, res, next) => {
 exports.addPackage = async (req, res, next) => {
   try {
     const { postId, packages } = req.body;
+
+    // ? Validate post id
+    if (typeof postId !== "string" || postId.trim() === "") {
+      return res.status(400).json({ message: "post id is require" });
+    }
 
     // ? Select post for add package
     const post = await Post.findOne({ where: { id: postId } });
