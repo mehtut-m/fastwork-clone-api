@@ -233,6 +233,7 @@ exports.addPackage = async (req, res, next) => {
           description,
           price,
           duration,
+          status: "SUBMIT",
         });
         result.push(createPackage);
       }
