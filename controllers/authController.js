@@ -70,15 +70,33 @@ exports.register = async (req, res, next) => {
 
     // Hasd password
     const hashedPassword = await bcrypt.hash(password, 12);
-    await User.create({
+    const createUser = await User.create({
       firstName,
       lastName,
       email,
       password: hashedPassword,
     });
-    res
-      .status(201)
-      .json({ message: "user created", firstName, lastName, email });
+
+    // Find User
+    const user = await User.findOne({
+      where: { id: createUser.dataValues.id },
+      attributes: {
+        exclude: ["password", "facebookId", "googleId"],
+      },
+    });
+
+    const payload = {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
+
+    // Create token
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
+      expiresIn: 60 * 60 * 24 * 30,
+    });
+
+    res.status(201).json({ message: "user created", token, user });
   } catch (err) {
     next(err);
   }
