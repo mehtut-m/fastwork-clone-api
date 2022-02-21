@@ -57,3 +57,11 @@ exports.updateProfileImage = async (req, res, next) => {
     next(err);
   }
 };
+
+// TODO: Delete user
+exports.deleteUser = async (req, res, next) => {
+  try {
+  } catch (err) {
+    next(err);
+  }
+};

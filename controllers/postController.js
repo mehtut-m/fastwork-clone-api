@@ -9,7 +9,6 @@ const {
   sequelize,
   FreelanceInfo,
   Categories,
-  subCategories,
   User,
   Address,
   Bank,
@@ -103,7 +102,7 @@ exports.getPostById = async (req, res, next) => {
       return res.status(400).json({ message: "post id is require" });
     }
     const post = await Post.findOne({
-      where: { id },
+      where: { id, status: "APPROVE", isActive: "1" },
       include: [
         {
           model: User,
@@ -161,6 +160,43 @@ exports.getPostById = async (req, res, next) => {
   }
 };
 
+// TODO: Get post by category id
+exports.getPostByCategory = async (req, res, next) => {
+  try {
+    const { categoriesId } = req.params;
+
+    // ? Validate category id
+    if (typeof categoriesId !== "string" || categoriesId.trim() === "") {
+      return res.status(400).json({ message: "Categories id is require" });
+    }
+
+    // ? Find Categories id
+    const categories = await Categories.findOne({
+      where: { id: categoriesId },
+    });
+    if (!categories) {
+      return res.status(400).json({ message: "categories id not found" });
+    }
+
+    // ? Find sub categories
+    const subCategories = await SubCategories.findAll({
+      where: { categoryId: categories.id },
+    });
+
+    // ? Find post by sub categories
+    const subCategoryId = subCategories.map((item) => item.id);
+    let result = [];
+    for (const id of subCategoryId) {
+      const post = await Post.findAll({ where: { subCategoryId: id } });
+      result.push(post[0]);
+    }
+
+    res.status(200).json({ result });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // TODO: Select category and sub category (Step 1)
 exports.selectCategory = async (req, res, next) => {
   try {
@@ -201,7 +237,7 @@ exports.addNameAndDescription = async (req, res, next) => {
     const { postId, name, description } = req.body;
 
     // ? Validate post id
-    if (typeof postId !== "string" || postId.trim() === "") {
+    if (typeof postId !== "number") {
       return res.status(400).json({ message: "post id is require" });
     }
 
@@ -240,7 +276,7 @@ exports.addImage = async (req, res, next) => {
     const { postId } = req.body;
 
     // ? Validate post id
-    if (typeof postId !== "string" || postId.trim() === "") {
+    if (typeof postId !== "number") {
       return res.status(400).json({ message: "post id is require" });
     }
 
@@ -284,7 +320,7 @@ exports.addInstruction = async (req, res, next) => {
     const { postId, instructions } = req.body;
 
     // ? Validate post id
-    if (typeof postId !== "string" || postId.trim() === "") {
+    if (typeof postId !== "number") {
       return res.status(400).json({ message: "post id is require" });
     }
 
@@ -320,7 +356,7 @@ exports.addPackage = async (req, res, next) => {
     const { postId, packages } = req.body;
 
     // ? Validate post id
-    if (typeof postId !== "string" || postId.trim() === "") {
+    if (typeof postId !== "number") {
       return res.status(400).json({ message: "post id is require" });
     }
 

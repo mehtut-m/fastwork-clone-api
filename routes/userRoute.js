@@ -1,5 +1,9 @@
 const express = require("express");
-const { getMe, updateProfileImage } = require("../controllers/userController");
+const {
+  getMe,
+  updateProfileImage,
+  deleteUser,
+} = require("../controllers/userController");
 const authenticate = require("../middlewares/authenticate");
 const upload = require("../middlewares/upload");
 
@@ -15,5 +19,8 @@ router.patch(
   upload.single("profileImage"),
   updateProfileImage
 );
+
+// TODO: Delete user
+router.delete("/delete", authenticate, deleteUser);
 
 module.exports = router;
