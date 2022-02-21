@@ -109,6 +109,12 @@ exports.getPostById = async (req, res, next) => {
       where: { id, status: "APPROVE", isActive: "1" },
       include: [
         {
+          model: SubCategories,
+          include: {
+            model: Categories,
+          },
+        },
+        {
           model: User,
           attributes: [
             "id",
@@ -157,6 +163,8 @@ exports.getPostById = async (req, res, next) => {
     if (!post) {
       return res.status(400).json({ message: "post not found" });
     }
+
+    console.log(post.subCategoryId);
 
     // TODO: Convent instruction
     post.instruction = JSON.parse(post.instruction);
