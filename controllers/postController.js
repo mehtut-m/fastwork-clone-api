@@ -187,7 +187,53 @@ exports.getPostByCategory = async (req, res, next) => {
     const subCategoryId = subCategories.map((item) => item.id);
     let result = [];
     for (const id of subCategoryId) {
-      const post = await Post.findAll({ where: { subCategoryId: id } });
+      const post = await Post.findAll({
+        where: { subCategoryId: id },
+        include: [
+          {
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
+            include: {
+              model: FreelanceInfo,
+              attributes: {
+                exclude: [
+                  "citizenCardNo",
+                  "imageWithCard",
+                  "cardImage",
+                  "bankAccountNo",
+                  "bankAccountImage",
+                ],
+              },
+              include: [
+                {
+                  as: "citizenAddress",
+                  model: Address,
+                },
+                {
+                  as: "currentAddress",
+                  model: Address,
+                },
+                {
+                  model: Bank,
+                },
+              ],
+            },
+          },
+          {
+            model: PostImage,
+          },
+          {
+            model: Package,
+          },
+        ],
+      });
       result.push(post[0]);
     }
 

@@ -1,6 +1,6 @@
 const fs = require("fs");
 const cloudinary = require("cloudinary").v2;
-const { User } = require("../models");
+const { User, FreelanceInfo } = require("../models");
 
 // TODO: Get me
 exports.getMe = async (req, res, next) => {
@@ -16,6 +16,11 @@ exports.getMe = async (req, res, next) => {
       freelanceInfoId, // ! Must Have?
       role,
     } = req.user;
+
+    const freelanceInfo = await FreelanceInfo.findOne({
+      where: { userId: req.user.id },
+      attributes: ["displayName", "profileDesc", "createdAt", "status"],
+    });
     const user = {
       id,
       firstName,
@@ -24,8 +29,9 @@ exports.getMe = async (req, res, next) => {
       telephoneNo,
       dataOfBirth,
       profileImage,
-      freelanceInfoId,
       role,
+      freelanceInfoId,
+      freelanceInfo,
     };
     res.status(200).json({ user });
   } catch (err) {
