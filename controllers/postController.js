@@ -86,7 +86,11 @@ exports.getAllPost = async (req, res, next) => {
         },
       ],
     });
-    res.status(200).json(posts);
+
+    // TODO: Convent instruction
+    posts[0].instruction = JSON.parse(posts[0].instruction);
+
+    res.status(200).json({ posts });
   } catch (err) {
     next(err);
   }
@@ -153,6 +157,9 @@ exports.getPostById = async (req, res, next) => {
     if (!post) {
       return res.status(400).json({ message: "post not found" });
     }
+
+    // TODO: Convent instruction
+    post.instruction = JSON.parse(post.instruction);
 
     res.status(200).json({ post });
   } catch (err) {
@@ -234,10 +241,12 @@ exports.getPostByCategory = async (req, res, next) => {
           },
         ],
       });
+      // TODO: Convent instruction
+      if (post[0]) post[0].instruction = JSON.parse(post[0].instruction);
       result.push(post[0]);
     }
 
-    res.status(200).json({ result });
+    res.status(200).json({ posts: result });
   } catch (err) {
     next(err);
   }
