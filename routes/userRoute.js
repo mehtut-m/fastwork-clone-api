@@ -10,7 +10,7 @@ router.get("/me", authenticate, getMe);
 
 // TODO: Update profile image
 router.patch(
-  "/profile-img",
+  "/profile-image",
   authenticate,
   upload.single("profileImage"),
   updateProfileImage
