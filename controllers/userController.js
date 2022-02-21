@@ -33,6 +33,7 @@ exports.getMe = async (req, res, next) => {
   }
 };
 
+// TODO: update profile image
 exports.updateProfileImage = async (req, res, next) => {
   try {
     cloudinary.uploader.upload(req.file.path, async (err, result) => {
