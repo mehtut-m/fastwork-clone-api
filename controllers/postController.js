@@ -175,12 +175,12 @@ exports.getPostById = async (req, res, next) => {
   }
 };
 
-// TODO: Get post by category id
-exports.getPostByCategory = async (req, res, next) => {
+// TODO: Get post by categories id
+exports.getPostByCategories = async (req, res, next) => {
   try {
     const { categoriesId } = req.params;
 
-    // ? Validate category id
+    // ? Validate categories id
     if (typeof categoriesId !== "string" || categoriesId.trim() === "") {
       return res.status(400).json({ message: "Categories id is require" });
     }
@@ -255,6 +255,82 @@ exports.getPostByCategory = async (req, res, next) => {
     }
 
     res.status(200).json({ posts: result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// TODO: Get post by sub categories id
+exports.getPostBySubCategories = async (req, res, next) => {
+  try {
+    const { subCategoriesId } = req.params;
+
+    // ? Validate sub categories id
+    if (typeof subCategoriesId !== "string" || subCategoriesId.trim() === "") {
+      return res.status(400).json({ message: "Sub categories id is require" });
+    }
+
+    // ? Find Sub category
+    const subCategory = await SubCategories.findOne({
+      where: { id: subCategoriesId },
+    });
+
+    // ? Validate sub category
+    if (!subCategory) {
+      return res.status(400).json({ message: "Sub categories id not found" });
+    }
+
+    const post = await Post.findAll({
+      where: { subCategoryId: subCategoriesId },
+      include: [
+        {
+          model: User,
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "telephoneNo",
+            "dateOfBirth",
+            "profileImage",
+          ],
+          include: {
+            model: FreelanceInfo,
+            attributes: {
+              exclude: [
+                "citizenCardNo",
+                "imageWithCard",
+                "cardImage",
+                "bankAccountNo",
+                "bankAccountImage",
+              ],
+            },
+            include: [
+              {
+                as: "citizenAddress",
+                model: Address,
+              },
+              {
+                as: "currentAddress",
+                model: Address,
+              },
+              {
+                model: Bank,
+              },
+            ],
+          },
+        },
+        {
+          model: PostImage,
+        },
+        {
+          model: Package,
+        },
+      ],
+    });
+
+    // TODO: Convent instruction
+    post[0].instruction = JSON.parse(post[0].instruction);
+    res.status(200).json({ post });
   } catch (err) {
     next(err);
   }

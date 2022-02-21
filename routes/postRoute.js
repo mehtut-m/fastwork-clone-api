@@ -9,7 +9,8 @@ const {
   addInstruction,
   addPackage,
   getPostById,
-  getPostByCategory,
+  getPostByCategories,
+  getPostBySubCategories,
 } = require("../controllers/postController");
 
 const router = express.Router();
@@ -21,7 +22,10 @@ router.get("/", getAllPost);
 router.get("/:id", getPostById);
 
 // TODO: Get post by category id
-router.get("/categories/:categoriesId", getPostByCategory);
+router.get("/categories/:categoriesId", getPostByCategories);
+
+// TODO: Get post by sub category id
+router.get("/subCategories/:subCategoriesId", getPostBySubCategories);
 
 // TODO: Select category and sub category
 router.post("/category", authenticate, selectCategory);
