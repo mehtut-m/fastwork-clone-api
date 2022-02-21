@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       profileDesc: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(1234),
       },
       citizenCardNo: {
         type: DataTypes.STRING,

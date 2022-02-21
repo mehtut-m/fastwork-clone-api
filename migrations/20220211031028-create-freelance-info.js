@@ -37,7 +37,7 @@ module.exports = {
         allowNull: false,
       },
       profile_desc: {
-        type: Sequelize.DataTypes.STRING,
+        type: Sequelize.DataTypes.STRING(1234),
       },
       citizen_card_no: {
         type: Sequelize.DataTypes.STRING,
