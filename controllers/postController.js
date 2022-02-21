@@ -40,7 +40,7 @@ const isValidDate = (date) => {
 exports.getAllPost = async (req, res, next) => {
   try {
     const posts = await Post.findAll({
-      where: {},
+      where: { status: "APPROVE", isActive: 1 },
       include: [
         {
           model: User,
@@ -351,17 +351,22 @@ exports.addImage = async (req, res, next) => {
 
     let result = {};
     let tmp = [];
-
+    let idx = 0;
+    const addOrder = () => {
+      return (idx += 1);
+    };
     // * Upload image to cloudinary
     if (req.files) {
       for (const file of req.files) {
         const { path } = file;
+
         result = await uploadPromise(path);
         fs.unlinkSync(path);
         const postImage = await PostImage.create(
           {
             postId,
             url: result.secure_url,
+            order: addOrder(),
           },
           { transaction }
         );
@@ -447,7 +452,7 @@ exports.addPackage = async (req, res, next) => {
         }
 
         // ? Validate price
-        if (typeof price !== "string" || price.trim() === "") {
+        if (typeof price !== "number") {
           return res.status(400).json({ message: "invalid price" });
         }
 

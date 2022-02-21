@@ -32,7 +32,7 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
       },
       price: {
-        type: Sequelize.DataTypes.STRING,
+        type: Sequelize.DataTypes.DECIMAL(10, 2),
         allowNull: false,
       },
       duration: {
