@@ -1,39 +1,90 @@
-const { Package, Post, Order } = require("../models");
+const fs = require("fs");
+const util = require("util");
+const cloudinary = require("cloudinary").v2;
+const { Package, Post, Order, sequelize, OrderImage } = require("../models");
+
+// TODO: Function upload image to cloudinary
+const uploadPromise = util.promisify(cloudinary.uploader.upload);
 
 // TODO: Create order
 exports.createOrder = async (req, res, next) => {
+  const transaction = await sequelize.transaction();
   try {
-    const { packageId } = req.params;
+    const { packageId, requirement } = req.body;
 
     // ? Validate package id
     if (typeof packageId !== "string" || packageId.trim() === "") {
       return res.status(400).json({ message: "package id is require" });
     }
 
+    // ? Validate requirement
+    if (typeof requirement !== "string" || requirement.trim() === "") {
+      return res.status(400).json({ message: "requirement is require" });
+    }
+
     // ? Find package
-    const package = await Package.findOne({ where: { id: packageId } });
+    const package = await Package.findOne(
+      { where: { id: packageId } },
+      { transaction }
+    );
     if (!package) {
       return res.status(400).json({ message: "package not found" });
     }
 
     // ? Find post
-    const post = await Post.findOne({ where: { id: package.postId } });
+    const post = await Post.findOne(
+      { where: { id: package.postId } },
+      { transaction }
+    );
     if (!post) {
       return res.status(400).json({ message: "post not found" });
     }
 
-    // ? Create order
-    const order = await Order.create({
-      buyerId: req.user.id,
-      postId: post.id,
-      packageId,
-      paymentId: new Date().getTime(),
-      paymentDate: new Date(),
-      countDuration: package.duration,
-    });
+    // * Create order
+    const order = await Order.create(
+      {
+        buyerId: req.user.id,
+        postId: post.id,
+        packageId,
+        status: "WORKING",
+        paymentId: new Date().getTime(),
+        paymentDate: new Date(),
+        durationCount: package.duration,
+        reviseCount: package.revise,
+        requirement,
+      },
+      { transaction }
+    );
 
-    res.status(201).json({ message: "create order", order });
+    let result = {};
+    let tmp = [];
+
+    // ? Validate image
+    if (req.files.length > 3) {
+      return res.status(400).json({ message: "maximum of image equal 3 " });
+    }
+
+    // * Create order image
+    if (req.files) {
+      for (const file of req.files) {
+        const { path } = file;
+        result = await uploadPromise(path);
+        fs.unlinkSync(path);
+        const orderImage = await OrderImage.create(
+          {
+            orderId: order.id,
+            url: result.secure_url,
+          },
+          { transaction }
+        );
+        tmp.push(orderImage);
+      }
+    }
+
+    await transaction.commit();
+    res.status(201).json({ message: "create order", order, tmp });
   } catch (err) {
+    await transaction.rollback();
     next(err);
   }
 };
@@ -54,6 +105,7 @@ exports.updateStatusToWork = async (req, res, next) => {
       return res.status(400).json({ message: "order not found" });
     }
 
+    // * update order
     await order.update({ status: "WORKING" });
 
     res.status(200).json({ message: "update status order to work", order });
@@ -78,6 +130,7 @@ exports.updateStatusToReview = async (req, res, next) => {
       return res.status(400).json({ message: "order not found" });
     }
 
+    // * Update order
     await order.update({ status: "REVIEW", submitDate: new Date() });
 
     res.status(200).json({ message: "update status order to review", order });
@@ -90,7 +143,7 @@ exports.updateStatusToReview = async (req, res, next) => {
 exports.userReview = async (req, res, next) => {
   try {
     const { orderId } = req.params;
-    const { status } = req.body;
+    const { revise } = req.body;
 
     // ? Validate order id
     if (typeof orderId !== "string" || orderId.trim() === "") {
@@ -104,22 +157,34 @@ exports.userReview = async (req, res, next) => {
     }
 
     // ? Validate status
-    if (typeof status !== "string" || status.trim() === "") {
-      return res.status(400).json({ message: "status is require" });
+    if (typeof revise !== "boolean") {
+      return res.status(400).json({ message: "revise is require" });
     }
 
-    if (status === "REJECT" && order.countDuration > 0) {
+    // ? If user need to revise
+    if (revise === true && order.reviseCount > 0) {
+      // * Update order
       await order.update({
-        status: "PENDING",
+        status: "WORKING",
         submitDate: null,
-        countDuration: order.countDuration - 1,
+        reviseCount: order.reviseCount - 1,
       });
-      res.status(200).json({ message: "Reject work", order });
-      return;
+      return res.status(200).json({ message: "Reject work for revise", order });
     }
 
-    if (order.countDuration < 1) {
-      return res.status(200).json({ message: "You" });
+    // ? If revise count = 0
+    if (order.reviseCount < 1) {
+      return res.status(200).json({ message: "You revise count not enough" });
+    }
+
+    // ? If user happy to finish order
+    if (revise === false) {
+      // * Update order
+      await order.update({
+        status: "COMPLETE",
+        completeDate: new Date(),
+      });
+      return res.status(200).json({ message: "Complete", order });
     }
   } catch (err) {
     next(err);

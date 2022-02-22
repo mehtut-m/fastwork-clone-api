@@ -63,14 +63,21 @@ module.exports = {
       },
       submit_date: {
         type: Sequelize.DataTypes.DATE,
-        // allowNull: false,
       },
       complete_date: {
         type: Sequelize.DataTypes.DATE,
-        // allowNull: false,
       },
-      count_duration: {
+      duration_count: {
         type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+      },
+      revise_count: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+      },
+      requirement: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: false,
       },
       created_at: {
         type: Sequelize.DataTypes.DATE,

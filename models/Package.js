@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       duration: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      revise: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
       },
     },
     {

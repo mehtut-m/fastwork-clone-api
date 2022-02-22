@@ -6,11 +6,12 @@ const {
   updateStatusToReview,
   userReview,
 } = require("../controllers/orderController");
+const upload = require("../middlewares/upload");
 
 const router = express.Router();
 
 // TODO: Create Order
-router.post("/:packageId", authenticate, createOrder);
+router.post("/order", upload.array("image", 12), authenticate, createOrder);
 
 // TODO: Freelance update status order to work
 router.patch("/update-status-work/:orderId", authenticate, updateStatusToWork);

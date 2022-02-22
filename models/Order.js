@@ -19,20 +19,21 @@ module.exports = (sequelize, DataTypes) => {
       },
       submitDate: {
         type: DataTypes.DATE,
-        // allowNull: false,
-        // validate: {
-        //   isDate: true,
-        // },
       },
       completeDate: {
         type: DataTypes.DATE,
-        // allowNull: false,
-        // validate: {
-        //   isDate: true,
-        // },
       },
-      countDuration: {
+      durationCount: {
         type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      reviseCount: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      requirement: {
+        type: DataTypes.TEXT,
+        allowNull: false,
       },
     },
     {
@@ -56,6 +57,12 @@ module.exports = (sequelize, DataTypes) => {
     Order.belongsTo(models.Package, {
       foreignKey: {
         name: "packageId",
+        allowNull: false,
+      },
+    });
+    Order.hasOne(models.OrderImage, {
+      foreignKey: {
+        name: "orderId",
         allowNull: false,
       },
     });
