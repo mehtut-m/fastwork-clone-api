@@ -1,6 +1,6 @@
-const fs = require('fs');
-const util = require('util');
-const cloudinary = require('cloudinary').v2;
+const fs = require("fs");
+const util = require("util");
+const cloudinary = require("cloudinary").v2;
 const {
   SubCategories,
   Post,
@@ -12,8 +12,8 @@ const {
   User,
   Address,
   Bank,
-} = require('../models');
-const validator = require('validator');
+} = require("../models");
+const validator = require("validator");
 
 // TODO: Function upload image to cloudinary
 const uploadPromise = util.promisify(cloudinary.uploader.upload);
@@ -21,55 +21,55 @@ const uploadPromise = util.promisify(cloudinary.uploader.upload);
 // TODO: Function validate name
 const isValidName = (item) => {
   return (
-    (typeof item === 'string' && validator.isAlphanumeric(item)) ||
+    (typeof item === "string" && validator.isAlphanumeric(item)) ||
     /^[ก-๙]+$/gi.test(item)
   );
 };
 
 // TODO: Function validate special character
 const isValidNameSpecial = (item) => {
-  return typeof item === 'string' && /^[^<>%$]*$/.test(item);
+  return typeof item === "string" && /^[^<>%$]*$/.test(item);
 };
 
 // TODO: Function validate date
 const isValidDate = (date) => {
-  return typeof date === 'string' && validator.isDate(date);
+  return typeof date === "string" && validator.isDate(date);
 };
 
 // TODO: Get all post
 exports.getAllPost = async (req, res, next) => {
   try {
     const posts = await Post.findAll({
-      where: { status: 'APPROVE', isActive: 1 },
+      where: { status: "APPROVE", isActive: 1 },
       include: [
         {
           model: User,
           attributes: [
-            'id',
-            'firstName',
-            'lastName',
-            'telephoneNo',
-            'dateOfBirth',
-            'profileImage',
+            "id",
+            "firstName",
+            "lastName",
+            "telephoneNo",
+            "dateOfBirth",
+            "profileImage",
           ],
           include: {
             model: FreelanceInfo,
             attributes: {
               exclude: [
-                'citizenCardNo',
-                'imageWithCard',
-                'cardImage',
-                'bankAccountNo',
-                'bankAccountImage',
+                "citizenCardNo",
+                "imageWithCard",
+                "cardImage",
+                "bankAccountNo",
+                "bankAccountImage",
               ],
             },
             include: [
               {
-                as: 'citizenAddress',
+                as: "citizenAddress",
                 model: Address,
               },
               {
-                as: 'currentAddress',
+                as: "currentAddress",
                 model: Address,
               },
               {
@@ -102,11 +102,11 @@ exports.getPostById = async (req, res, next) => {
     const { id } = req.params;
 
     // ? Validate post id
-    if (typeof id !== 'string' || id.trim() === '') {
-      return res.status(400).json({ message: 'post id is require' });
+    if (typeof id !== "string" || id.trim() === "") {
+      return res.status(400).json({ message: "post id is require" });
     }
     const post = await Post.findOne({
-      where: { id, status: 'APPROVE', isActive: '1' },
+      where: { id, status: "APPROVE", isActive: "1" },
       include: [
         {
           model: SubCategories,
@@ -117,31 +117,31 @@ exports.getPostById = async (req, res, next) => {
         {
           model: User,
           attributes: [
-            'id',
-            'firstName',
-            'lastName',
-            'telephoneNo',
-            'dateOfBirth',
-            'profileImage',
+            "id",
+            "firstName",
+            "lastName",
+            "telephoneNo",
+            "dateOfBirth",
+            "profileImage",
           ],
           include: {
             model: FreelanceInfo,
             attributes: {
               exclude: [
-                'citizenCardNo',
-                'imageWithCard',
-                'cardImage',
-                'bankAccountNo',
-                'bankAccountImage',
+                "citizenCardNo",
+                "imageWithCard",
+                "cardImage",
+                "bankAccountNo",
+                "bankAccountImage",
               ],
             },
             include: [
               {
-                as: 'citizenAddress',
+                as: "citizenAddress",
                 model: Address,
               },
               {
-                as: 'currentAddress',
+                as: "currentAddress",
                 model: Address,
               },
               {
@@ -161,7 +161,7 @@ exports.getPostById = async (req, res, next) => {
 
     // ? Validate post
     if (!post) {
-      return res.status(400).json({ message: 'post not found' });
+      return res.status(400).json({ message: "post not found" });
     }
 
     console.log(post.subCategoryId);
@@ -181,8 +181,8 @@ exports.getPostByCategories = async (req, res, next) => {
     const { categoriesId } = req.params;
 
     // ? Validate categories id
-    if (typeof categoriesId !== 'string' || categoriesId.trim() === '') {
-      return res.status(400).json({ message: 'Categories id is require' });
+    if (typeof categoriesId !== "string" || categoriesId.trim() === "") {
+      return res.status(400).json({ message: "Categories id is require" });
     }
 
     // ? Find Categories id
@@ -190,7 +190,7 @@ exports.getPostByCategories = async (req, res, next) => {
       where: { id: categoriesId },
     });
     if (!categories) {
-      return res.status(400).json({ message: 'categories id not found' });
+      return res.status(400).json({ message: "categories id not found" });
     }
 
     // ? Find sub categories
@@ -208,31 +208,31 @@ exports.getPostByCategories = async (req, res, next) => {
           {
             model: User,
             attributes: [
-              'id',
-              'firstName',
-              'lastName',
-              'telephoneNo',
-              'dateOfBirth',
-              'profileImage',
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
             ],
             include: {
               model: FreelanceInfo,
               attributes: {
                 exclude: [
-                  'citizenCardNo',
-                  'imageWithCard',
-                  'cardImage',
-                  'bankAccountNo',
-                  'bankAccountImage',
+                  "citizenCardNo",
+                  "imageWithCard",
+                  "cardImage",
+                  "bankAccountNo",
+                  "bankAccountImage",
                 ],
               },
               include: [
                 {
-                  as: 'citizenAddress',
+                  as: "citizenAddress",
                   model: Address,
                 },
                 {
-                  as: 'currentAddress',
+                  as: "currentAddress",
                   model: Address,
                 },
                 {
@@ -266,8 +266,8 @@ exports.getPostBySubCategories = async (req, res, next) => {
     const { subCategoriesId } = req.params;
 
     // ? Validate sub categories id
-    if (typeof subCategoriesId !== 'string' || subCategoriesId.trim() === '') {
-      return res.status(400).json({ message: 'Sub categories id is require' });
+    if (typeof subCategoriesId !== "string" || subCategoriesId.trim() === "") {
+      return res.status(400).json({ message: "Sub categories id is require" });
     }
 
     // ? Find Sub category
@@ -277,7 +277,7 @@ exports.getPostBySubCategories = async (req, res, next) => {
 
     // ? Validate sub category
     if (!subCategory) {
-      return res.status(400).json({ message: 'Sub categories id not found' });
+      return res.status(400).json({ message: "Sub categories id not found" });
     }
 
     const post = await Post.findAll({
@@ -286,31 +286,31 @@ exports.getPostBySubCategories = async (req, res, next) => {
         {
           model: User,
           attributes: [
-            'id',
-            'firstName',
-            'lastName',
-            'telephoneNo',
-            'dateOfBirth',
-            'profileImage',
+            "id",
+            "firstName",
+            "lastName",
+            "telephoneNo",
+            "dateOfBirth",
+            "profileImage",
           ],
           include: {
             model: FreelanceInfo,
             attributes: {
               exclude: [
-                'citizenCardNo',
-                'imageWithCard',
-                'cardImage',
-                'bankAccountNo',
-                'bankAccountImage',
+                "citizenCardNo",
+                "imageWithCard",
+                "cardImage",
+                "bankAccountNo",
+                "bankAccountImage",
               ],
             },
             include: [
               {
-                as: 'citizenAddress',
+                as: "citizenAddress",
                 model: Address,
               },
               {
-                as: 'currentAddress',
+                as: "currentAddress",
                 model: Address,
               },
               {
@@ -349,7 +349,7 @@ exports.selectCategory = async (req, res, next) => {
       where: { id: subCategoryId },
     });
     if (!subCategory) {
-      return res.status(400).json({ message: 'sub category id not found' });
+      return res.status(400).json({ message: "sub category id not found" });
     }
 
     let post;
@@ -359,14 +359,14 @@ exports.selectCategory = async (req, res, next) => {
       post = await Post.findOne({ where: { id: postId } });
       // * Update post
       post.update({ subCategoryId });
-      res.status(201).json({ message: 'post update with status DRAFT', post });
+      res.status(201).json({ message: "post update with status DRAFT", post });
     }
 
     if (!postId) {
       // ! ควรแยก nedpoint?
       // * Create post
       post = await Post.create({ userId: req.user.id, subCategoryId });
-      res.status(201).json({ message: 'post create with status DRAFT', post });
+      res.status(201).json({ message: "post create with status DRAFT", post });
     }
   } catch (err) {
     next(err);
@@ -379,33 +379,33 @@ exports.addNameAndDescription = async (req, res, next) => {
     const { postId, name, description } = req.body;
 
     // ? Validate post id
-    if (typeof postId !== 'number') {
-      return res.status(400).json({ message: 'post id is require' });
+    if (typeof postId !== "number") {
+      return res.status(400).json({ message: "post id is require" });
     }
 
     // ? Select post for add name and description
     const post = await Post.findOne({ where: { id: postId } });
     if (!post) {
-      return res.status(400).json({ message: 'post id not found' });
+      return res.status(400).json({ message: "post id not found" });
     }
 
     // ? Validate name
     if (name.length < 10) {
       return res.status(400).json({
-        message: 'name must be at least 10 characters',
+        message: "name must be at least 10 characters",
       });
     }
 
     // ? Validate description
     if (description.length < 10) {
       return res.status(400).json({
-        message: 'description must be at least 10 characters',
+        message: "description must be at least 10 characters",
       });
     }
 
     // * Update Post
     post.update({ name, description });
-    res.status(200).json({ message: 'Add name and description', post });
+    res.status(200).json({ message: "Add name and description", post });
   } catch (err) {
     next(err);
   }
@@ -418,14 +418,14 @@ exports.addImage = async (req, res, next) => {
     const { postId } = req.body;
 
     // ? Validate post id
-    if (typeof postId !== 'number') {
-      return res.status(400).json({ message: 'post id is require' });
+    if (typeof postId !== "string" || postId.trim() === "") {
+      return res.status(400).json({ message: "post id is require" });
     }
 
     // ? Select post for add image
     const post = await Post.findOne({ where: { id: postId } }, { transaction });
     if (!post) {
-      return res.status(400).json({ message: 'post id not found' });
+      return res.status(400).json({ message: "post id not found" });
     }
 
     let result = {};
@@ -454,7 +454,7 @@ exports.addImage = async (req, res, next) => {
     }
 
     await transaction.commit();
-    res.status(200).json({ message: 'Add image', tmp });
+    res.status(200).json({ message: "Add image", tmp });
   } catch (err) {
     await transaction.rollback();
     next(err);
@@ -467,31 +467,31 @@ exports.addInstruction = async (req, res, next) => {
     const { postId, instructions } = req.body;
 
     // ? Validate post id
-    if (typeof postId !== 'number') {
-      return res.status(400).json({ message: 'post id is require' });
+    if (typeof postId !== "number") {
+      return res.status(400).json({ message: "post id is require" });
     }
 
     // ? Select post for add instruction
     const post = await Post.findOne({ where: { id: postId } });
     if (!post) {
-      return res.status(400).json({ message: 'post id not found' });
+      return res.status(400).json({ message: "post id not found" });
     }
 
     // ? Validate instructions
     if (instructions.length > 10) {
       return res.status(400).json({
-        message: 'maximum steps of instructions equal 10',
+        message: "maximum steps of instructions equal 10",
       });
     }
 
     const instruction = instructions.filter(
-      (item) => typeof item === 'string' && item.length > 1
+      (item) => typeof item === "string" && item.length > 1
     );
 
     const convert = JSON.stringify(instruction);
     // * Update post
     post.update({ instruction: convert });
-    res.status(200).json({ message: 'Add instruction', post });
+    res.status(200).json({ message: "Add instruction", post });
   } catch (err) {
     next(err);
   }
@@ -503,20 +503,20 @@ exports.addPackage = async (req, res, next) => {
     const { postId, packages } = req.body;
 
     // ? Validate post id
-    if (typeof postId !== 'number') {
-      return res.status(400).json({ message: 'post id is require' });
+    if (typeof postId !== "number") {
+      return res.status(400).json({ message: "post id is require" });
     }
 
     // ? Select post for add package
     const post = await Post.findOne({ where: { id: postId } });
     if (!post) {
-      return res.status(400).json({ message: 'post id not found' });
+      return res.status(400).json({ message: "post id not found" });
     }
 
     // ? Validate if packages > 3
     let result = [];
     if (packages.length > 3) {
-      return res.status(400).json({ message: 'maximum packages equal 3' });
+      return res.status(400).json({ message: "maximum packages equal 3" });
     }
 
     if (packages) {
@@ -526,18 +526,18 @@ exports.addPackage = async (req, res, next) => {
         // ? Validate description
         if (description.length < 10) {
           return res.status(400).json({
-            message: 'description must be at least 10 characters',
+            message: "description must be at least 10 characters",
           });
         }
 
         // ? Validate price
-        if (typeof price !== 'number') {
-          return res.status(400).json({ message: 'invalid price' });
+        if (typeof price !== "number") {
+          return res.status(400).json({ message: "invalid price" });
         }
 
         //? Validate duration
-        if (typeof duration !== 'string' || duration.trim() === '') {
-          return res.status(400).json({ message: 'invalid duration' });
+        if (typeof duration !== "string" || duration.trim() === "") {
+          return res.status(400).json({ message: "invalid duration" });
         }
 
         const createPackage = await Package.create({
@@ -546,12 +546,12 @@ exports.addPackage = async (req, res, next) => {
           description,
           price,
           duration,
-          status: 'SUBMIT',
+          status: "SUBMIT",
         });
         result.push(createPackage);
       }
     }
-    res.status(201).json({ message: 'create package success', result });
+    res.status(201).json({ message: "create package success", result });
   } catch (err) {
     next(err);
   }

@@ -117,6 +117,10 @@ exports.userReview = async (req, res, next) => {
       res.status(200).json({ message: "Reject work", order });
       return;
     }
+
+    if (order.countDuration < 1) {
+      return res.status(200).json({ message: "You" });
+    }
   } catch (err) {
     next(err);
   }
