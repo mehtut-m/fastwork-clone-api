@@ -14,6 +14,33 @@ const {
 // TODO: Function upload image to cloudinary
 const uploadPromise = util.promisify(cloudinary.uploader.upload);
 
+exports.getOrderById = async (req, res, next) => {
+  try {
+    const { orderId } = req.params;
+
+    // ? Validate order id
+    if (typeof orderId !== "string" || orderId.trim() === "") {
+      return res.status(400).json({ message: "order id is require" });
+    }
+
+    const order = await Order.findOne({
+      where: { id: orderId },
+      include: [
+        {
+          model: OrderDetail,
+        },
+      ],
+    });
+    if (!order) {
+      return res.status(400).json({ message: "order not found" });
+    }
+
+    res.status(200).json({ order });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // TODO: Create order
 exports.createOrder = async (req, res, next) => {
   const transaction = await sequelize.transaction();
@@ -152,7 +179,7 @@ exports.updateStatusToReview = async (req, res, next) => {
 
     // ? Find user
     if (req.user.id !== post.userId) {
-      return res.status(400).json({ message: "You cannot submit this order" });
+      return res.status(403).json({ message: "You cannot submit this order" });
     }
 
     // * Update order
@@ -213,7 +240,7 @@ exports.userReview = async (req, res, next) => {
 
     // ? Validate user
     if (req.user.id !== user.id) {
-      return res.status(400).json({ message: "You cannot review this order" });
+      return res.status(403).json({ message: "You cannot review this order" });
     }
 
     // ? Validate status

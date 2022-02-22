@@ -5,10 +5,14 @@ const {
   updateStatusToWork,
   updateStatusToReview,
   userReview,
+  getOrderById,
 } = require("../controllers/orderController");
 const upload = require("../middlewares/upload");
 
 const router = express.Router();
+
+// TODO: Get order by id
+router.get("/:orderId", authenticate, getOrderById);
 
 // TODO: Create Order
 router.post("/order", upload.array("image", 12), authenticate, createOrder);
