@@ -546,12 +546,21 @@ exports.addPackage = async (req, res, next) => {
           description,
           price,
           duration,
-          status: "SUBMIT",
+          status: "APPROVE", // ! status should be SUBMIT
         });
         result.push(createPackage);
       }
     }
     res.status(201).json({ message: "create package success", result });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// ! NOT FINISH
+// TODO: Change status post to APPROVE OR REJECT
+exports.changeStatusPost = async (req, res, next) => {
+  try {
   } catch (err) {
     next(err);
   }

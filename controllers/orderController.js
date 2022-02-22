@@ -47,7 +47,7 @@ exports.createOrder = async (req, res, next) => {
         postId: post.id,
         packageId,
         status: "WORKING",
-        paymentId: new Date().getTime(),
+        paymentId: new Date().getTime(), // ! payment
         paymentDate: new Date(),
         durationCount: package.duration,
         reviseCount: package.revise,

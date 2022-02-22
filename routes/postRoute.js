@@ -11,6 +11,7 @@ const {
   getPostById,
   getPostByCategories,
   getPostBySubCategories,
+  changeStatusPost,
 } = require("../controllers/postController");
 
 const router = express.Router();
@@ -41,5 +42,9 @@ router.patch("/instruction", authenticate, addInstruction);
 
 // TODO: Add Package
 router.post("/package", authenticate, addPackage);
+
+// ! NOT FINISH
+// TODO: Change status post to APPROVE OR REJECT
+router.patch("/review", authenticate, changeStatusPost);
 
 module.exports = router;
