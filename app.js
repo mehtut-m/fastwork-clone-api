@@ -7,6 +7,7 @@ const freelanceRoute = require("./routes/freelanceRoute");
 const categoriesRoute = require("./routes/categoriesRoute");
 const postRoute = require("./routes/postRoute");
 const userRoute = require("./routes/userRoute");
+const orderRoute = require("./routes/orderRoute");
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/freelance", freelanceRoute);
 app.use("/categories", categoriesRoute);
 app.use("/post", postRoute);
 app.use("/user", userRoute);
+app.use("/orders", orderRoute);
 
 app.use((req, res) => {
   res.status(404).json("Resource not found on this server");

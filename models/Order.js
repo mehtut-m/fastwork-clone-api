@@ -19,17 +19,20 @@ module.exports = (sequelize, DataTypes) => {
       },
       submitDate: {
         type: DataTypes.DATE,
-        allowNull: false,
-        validate: {
-          isDate: true,
-        },
+        // allowNull: false,
+        // validate: {
+        //   isDate: true,
+        // },
       },
       completeDate: {
         type: DataTypes.DATE,
-        allowNull: false,
-        validate: {
-          isDate: true,
-        },
+        // allowNull: false,
+        // validate: {
+        //   isDate: true,
+        // },
+      },
+      countDuration: {
+        type: DataTypes.INTEGER,
       },
     },
     {
