@@ -8,13 +8,23 @@ module.exports = {
      * Example:
      * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
      */
-    await queryInterface.createTable("orders", {
+    await queryInterface.createTable("order_details", {
       id: {
         type: Sequelize.DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
       },
-      buyer_id: {
+      order_id: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: "orders",
+          },
+          key: "id",
+        },
+      },
+      user_id: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
         references: {
@@ -24,52 +34,14 @@ module.exports = {
           key: "id",
         },
       },
-      post_id: {
-        type: Sequelize.DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: {
-            tableName: "posts",
-          },
-          key: "id",
-        },
+      submit_date: {
+        type: Sequelize.DataTypes.DATE,
       },
-      package_id: {
-        type: Sequelize.DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: {
-            tableName: "packages",
-          },
-          key: "id",
-        },
-      },
-      status: {
-        type: Sequelize.DataTypes.ENUM("WORKING", "REVIEW", "COMPLETE"),
-        allowNull: false,
-      },
-      payment_id: {
+      url: {
         type: Sequelize.DataTypes.STRING,
-        allowNull: false,
       },
-      payment_date: {
-        type: Sequelize.DataTypes.DATE,
-        allowNull: false,
-      },
-      complete_date: {
-        type: Sequelize.DataTypes.DATE,
-      },
-      duration_count: {
-        type: Sequelize.DataTypes.INTEGER,
-        allowNull: false,
-      },
-      revise_count: {
-        type: Sequelize.DataTypes.INTEGER,
-        allowNull: false,
-      },
-      requirement: {
+      comment: {
         type: Sequelize.DataTypes.TEXT,
-        allowNull: false,
       },
       created_at: {
         type: Sequelize.DataTypes.DATE,
@@ -87,6 +59,6 @@ module.exports = {
      * Example:
      * await queryInterface.dropTable('users');
      */
-    await queryInterface.dropTable("orders");
+    await queryInterface.dropTable("order_details");
   },
 };

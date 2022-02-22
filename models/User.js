@@ -83,6 +83,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
+    User.hasMany(models.OrderDetail, {
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+    });
   };
+
   return User;
 };

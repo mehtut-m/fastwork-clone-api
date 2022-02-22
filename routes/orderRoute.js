@@ -18,7 +18,8 @@ router.patch("/update-status-work/:orderId", authenticate, updateStatusToWork);
 
 // TODO: Submit work to review
 router.patch(
-  "/update-status-review/:orderId",
+  "/update-status-review",
+  upload.single("image"),
   authenticate,
   updateStatusToReview
 );

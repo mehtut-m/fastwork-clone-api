@@ -3,8 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     "Order",
     {
       status: {
-        type: DataTypes.ENUM("PENDING", "WORKING", "REVIEW", "COMPLETE"),
-        defaultValue: "PENDING",
+        type: DataTypes.ENUM("WORKING", "REVIEW", "COMPLETE"),
+        defaultValue: "WORKING",
       },
       paymentId: {
         type: DataTypes.STRING,
@@ -16,9 +16,6 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           isDate: true,
         },
-      },
-      submitDate: {
-        type: DataTypes.DATE,
       },
       completeDate: {
         type: DataTypes.DATE,
@@ -60,7 +57,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
-    Order.hasOne(models.OrderImage, {
+    Order.hasMany(models.OrderImage, {
+      foreignKey: {
+        name: "orderId",
+        allowNull: false,
+      },
+    });
+    Order.hasMany(models.OrderDetail, {
       foreignKey: {
         name: "orderId",
         allowNull: false,
