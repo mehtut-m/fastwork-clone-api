@@ -10,6 +10,7 @@ exports.checkOutCreditCard = async (req, res, next) => {
 
   const { email } = req.user;
   const description = 'test';
+  console.log(packageId);
   const purchasedPackage = await Package.findByPk(
     packageId,
     {
@@ -49,15 +50,15 @@ exports.checkOutCreditCard = async (req, res, next) => {
       status: 'PENDING',
       requirement,
     };
-    const order = await Order.create(item);
-    // // If updateOrder failed send response
-    if (!order) {
-      return res.status(400).json({ message: 'transaction failed' });
-    }
-    res.json({
-      order,
-    });
-    // ------------- Consider adding payment info table --------------
+
+    req.body.paymentId = charge.id;
+    req.body.paymentDate = charge['paid_at'];
+    // const order = await Order.create(item);
+    // // // If updateOrder failed send response
+    // if (!order) {
+    //   return res.status(400).json({ message: 'transaction failed' });
+    // }
+    next();
   } catch (err) {
     console.log(err);
     next(err);
