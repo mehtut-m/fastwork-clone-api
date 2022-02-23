@@ -89,10 +89,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
-    User.hasOne(models.Order, {
-      as: "user",
+    User.hasMany(models.Order, {
+      as: "seller",
       foreignKey: {
-        name: "userId",
+        name: "sellerId",
         allowNull: false,
       },
     });
