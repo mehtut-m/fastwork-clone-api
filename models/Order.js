@@ -69,6 +69,13 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
     });
+    Order.belongsTo(models.User, {
+      as: "user",
+      foreignKey: {
+        name: "userId",
+        allowNull: false,
+      },
+    });
   };
   return Order;
 };

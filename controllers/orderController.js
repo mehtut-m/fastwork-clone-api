@@ -15,159 +15,253 @@ const {
 // TODO: Function upload image to cloudinary
 const uploadPromise = util.promisify(cloudinary.uploader.upload);
 
-// TODO: Get order by status working
-exports.getOrderByStatusWorking = async (req, res, next) => {
+// TODO: Get order by status working from freelance
+exports.getOrderByStatusWorkingFromFreelance = async (req, res, next) => {
   try {
-    const post = await Post.findAll({ where: { userId: req.user.id } });
-    if (!post) {
-      return res.status(400).json({ message: "post not found" });
-    }
-
-    let orders = [];
-    for (const postId of post) {
-      const { id } = postId;
-      const order = await Order.findAll({
-        where: { status: "WORKING", postId: id },
-        include: [
-          {
-            model: Post,
+    const order = await Order.findAll({
+      where: { status: "WORKING", userId: req.user.id },
+      include: [
+        {
+          model: Post,
+          include: {
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
             include: {
-              model: User,
-              attributes: [
-                "id",
-                "firstName",
-                "lastName",
-                "telephoneNo",
-                "dateOfBirth",
-                "profileImage",
-              ],
-              include: {
-                model: FreelanceInfo,
-                attributes: {
-                  exclude: [
-                    "citizenCardNo",
-                    "imageWithCard",
-                    "cardImage",
-                    "bankAccountNo",
-                    "bankAccountImage",
-                  ],
-                },
+              model: FreelanceInfo,
+              attributes: {
+                exclude: [
+                  "citizenCardNo",
+                  "imageWithCard",
+                  "cardImage",
+                  "bankAccountNo",
+                  "bankAccountImage",
+                ],
               },
             },
           },
-        ],
-      });
-      orders.push(order);
-    }
+        },
+      ],
+    });
 
-    res.status(200).json({ orders });
+    res.status(200).json({ order });
   } catch (err) {
     next(err);
   }
 };
 
-// TODO: Get order by status review
-exports.getOrderByStatusReview = async (req, res, next) => {
+// TODO: Get order by status review from freelance
+exports.getOrderByStatusReviewFromFreelance = async (req, res, next) => {
   try {
-    const post = await Post.findAll({ where: { userId: req.user.id } });
-    if (!post) {
-      return res.status(400).json({ message: "post not found" });
-    }
-
-    let orders = [];
-    for (const postId of post) {
-      const { id } = postId;
-      const order = await Order.findAll({
-        where: { status: "REVIEW", postId: id },
-        include: [
-          {
-            model: Post,
+    const order = await Order.findAll({
+      where: { status: "REVIEW", userId: req.user.id },
+      include: [
+        {
+          model: Post,
+          include: {
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
             include: {
-              model: User,
-              attributes: [
-                "id",
-                "firstName",
-                "lastName",
-                "telephoneNo",
-                "dateOfBirth",
-                "profileImage",
-              ],
-              include: {
-                model: FreelanceInfo,
-                attributes: {
-                  exclude: [
-                    "citizenCardNo",
-                    "imageWithCard",
-                    "cardImage",
-                    "bankAccountNo",
-                    "bankAccountImage",
-                  ],
-                },
+              model: FreelanceInfo,
+              attributes: {
+                exclude: [
+                  "citizenCardNo",
+                  "imageWithCard",
+                  "cardImage",
+                  "bankAccountNo",
+                  "bankAccountImage",
+                ],
               },
             },
           },
-        ],
-      });
-      orders.push(order);
-    }
+        },
+      ],
+    });
 
-    res.status(200).json({ orders });
+    res.status(200).json({ order });
   } catch (err) {
     next(err);
   }
 };
 
-// TODO: Get order by status complete
-exports.getOrderByStatusComplete = async (req, res, next) => {
+// TODO: Get order by status complete from freelance
+exports.getOrderByStatusCompleteFromFreelance = async (req, res, next) => {
   try {
-    const post = await Post.findAll({ where: { userId: req.user.id } });
-    if (!post) {
-      return res.status(400).json({ message: "post not found" });
-    }
-
-    let orders = [];
-    for (const postId of post) {
-      const { id } = postId;
-      const order = await Order.findAll({
-        where: { status: "COMPLETE", postId: id },
-        include: [
-          {
-            model: Post,
+    const order = await Order.findAll({
+      where: { status: "COMPLETE", userId: req.user.id },
+      include: [
+        {
+          model: Post,
+          include: {
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
             include: {
-              model: User,
-              attributes: [
-                "id",
-                "firstName",
-                "lastName",
-                "telephoneNo",
-                "dateOfBirth",
-                "profileImage",
-              ],
-              include: {
-                model: FreelanceInfo,
-                attributes: {
-                  exclude: [
-                    "citizenCardNo",
-                    "imageWithCard",
-                    "cardImage",
-                    "bankAccountNo",
-                    "bankAccountImage",
-                  ],
-                },
+              model: FreelanceInfo,
+              attributes: {
+                exclude: [
+                  "citizenCardNo",
+                  "imageWithCard",
+                  "cardImage",
+                  "bankAccountNo",
+                  "bankAccountImage",
+                ],
               },
             },
           },
-        ],
-      });
-      orders.push(order);
-    }
+        },
+      ],
+    });
 
-    res.status(200).json({ orders });
+    res.status(200).json({ order });
   } catch (err) {
     next(err);
   }
 };
 
+// TODO: Get order by status working from buyer
+exports.getOrderByStatusWorkingFromUser = async (req, res, next) => {
+  try {
+    const order = await Order.findAll({
+      where: { status: "WORKING", buyerId: req.user.id },
+      include: [
+        {
+          model: Post,
+          include: {
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
+            include: {
+              model: FreelanceInfo,
+              attributes: {
+                exclude: [
+                  "citizenCardNo",
+                  "imageWithCard",
+                  "cardImage",
+                  "bankAccountNo",
+                  "bankAccountImage",
+                ],
+              },
+            },
+          },
+        },
+      ],
+    });
+
+    res.status(200).json({ order });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// TODO: Get order by status review from buyer
+exports.getOrderByStatusReviewFromUser = async (req, res, next) => {
+  try {
+    const order = await Order.findAll({
+      where: { status: "REVIEW", buyerId: req.user.id },
+      include: [
+        {
+          model: Post,
+          include: {
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
+            include: {
+              model: FreelanceInfo,
+              attributes: {
+                exclude: [
+                  "citizenCardNo",
+                  "imageWithCard",
+                  "cardImage",
+                  "bankAccountNo",
+                  "bankAccountImage",
+                ],
+              },
+            },
+          },
+        },
+      ],
+    });
+
+    res.status(200).json({ order });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// TODO: Get order by status complete from user
+exports.getOrderByStatusCompleteFromUser = async (req, res, next) => {
+  try {
+    const order = await Order.findAll({
+      where: { status: "COMPLETE", buyerId: req.user.id },
+      include: [
+        {
+          model: Post,
+          include: {
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
+            include: {
+              model: FreelanceInfo,
+              attributes: {
+                exclude: [
+                  "citizenCardNo",
+                  "imageWithCard",
+                  "cardImage",
+                  "bankAccountNo",
+                  "bankAccountImage",
+                ],
+              },
+            },
+          },
+        },
+      ],
+    });
+
+    res.status(200).json({ order });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// TODO: Get order by id
 exports.getOrderById = async (req, res, next) => {
   try {
     const { orderId } = req.params;
@@ -237,6 +331,7 @@ exports.createOrder = async (req, res, next) => {
     const order = await Order.create(
       {
         buyerId: req.user.id,
+        userId: post.userId,
         postId: post.id,
         packageId,
         paymentId: new Date().getTime(), // ! payment

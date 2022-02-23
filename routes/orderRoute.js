@@ -7,29 +7,57 @@ const {
   userReview,
   getOrderById,
   userApprove,
-  getOrderByStatusWorking,
-  getOrderByStatusReview,
-  getOrderByStatusComplete,
+  getOrderByStatusWorkingFromFreelance,
+  getOrderByStatusReviewFromFreelance,
+  getOrderByStatusCompleteFromFreelance,
+  getOrderByStatusWorkingFromUser,
+  getOrderByStatusReviewFromUser,
+  getOrderByStatusCompleteFromUser,
 } = require("../controllers/orderController");
 const upload = require("../middlewares/upload");
 
 const router = express.Router();
 
-// TODO: Get order by status working
+// TODO: Get order by status working from freelance
 router.get(
-  "/get-order-by-status-working",
+  "/get-order-by-status-working-freelance",
   authenticate,
-  getOrderByStatusWorking
+  getOrderByStatusWorkingFromFreelance
 );
 
-// TODO: Get order by status review
-router.get("/get-order-by-status-review", authenticate, getOrderByStatusReview);
-
-// TODO: Get order by status complete
+// TODO: Get order by status review from freelance
 router.get(
-  "/get-order-by-status-complete",
+  "/get-order-by-status-review-freelance",
   authenticate,
-  getOrderByStatusComplete
+  getOrderByStatusReviewFromFreelance
+);
+
+// TODO: Get order by status complete from freelance
+router.get(
+  "/get-order-by-status-complete-freelance",
+  authenticate,
+  getOrderByStatusCompleteFromFreelance
+);
+
+// TODO: Get order by status working from user
+router.get(
+  "/get-order-by-status-working-user",
+  authenticate,
+  getOrderByStatusWorkingFromUser
+);
+
+// TODO: Get order by status review from user
+router.get(
+  "/get-order-by-status-review-user",
+  authenticate,
+  getOrderByStatusReviewFromUser
+);
+
+// TODO: Get order by status complete from user
+router.get(
+  "/get-order-by-status-complete-user",
+  authenticate,
+  getOrderByStatusCompleteFromUser
 );
 
 // TODO: Get order by id
