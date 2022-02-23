@@ -18,6 +18,18 @@ module.exports = {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
         references: {
+          as: "buyer",
+          model: {
+            tableName: "users",
+          },
+          key: "id",
+        },
+      },
+      user_id: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          as: "user",
           model: {
             tableName: "users",
           },
