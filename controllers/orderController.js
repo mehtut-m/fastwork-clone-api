@@ -9,10 +9,164 @@ const {
   OrderImage,
   OrderDetail,
   User,
+  FreelanceInfo,
 } = require("../models");
 
 // TODO: Function upload image to cloudinary
 const uploadPromise = util.promisify(cloudinary.uploader.upload);
+
+// TODO: Get order by status working
+exports.getOrderByStatusWorking = async (req, res, next) => {
+  try {
+    const post = await Post.findAll({ where: { userId: req.user.id } });
+    if (!post) {
+      return res.status(400).json({ message: "post not found" });
+    }
+
+    let orders = [];
+    for (const postId of post) {
+      const { id } = postId;
+      const order = await Order.findAll({
+        where: { status: "WORKING", postId: id },
+        include: [
+          {
+            model: Post,
+            include: {
+              model: User,
+              attributes: [
+                "id",
+                "firstName",
+                "lastName",
+                "telephoneNo",
+                "dateOfBirth",
+                "profileImage",
+              ],
+              include: {
+                model: FreelanceInfo,
+                attributes: {
+                  exclude: [
+                    "citizenCardNo",
+                    "imageWithCard",
+                    "cardImage",
+                    "bankAccountNo",
+                    "bankAccountImage",
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      });
+      orders.push(order);
+    }
+
+    res.status(200).json({ orders });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// TODO: Get order by status review
+exports.getOrderByStatusReview = async (req, res, next) => {
+  try {
+    const post = await Post.findAll({ where: { userId: req.user.id } });
+    if (!post) {
+      return res.status(400).json({ message: "post not found" });
+    }
+
+    let orders = [];
+    for (const postId of post) {
+      const { id } = postId;
+      const order = await Order.findAll({
+        where: { status: "REVIEW", postId: id },
+        include: [
+          {
+            model: Post,
+            include: {
+              model: User,
+              attributes: [
+                "id",
+                "firstName",
+                "lastName",
+                "telephoneNo",
+                "dateOfBirth",
+                "profileImage",
+              ],
+              include: {
+                model: FreelanceInfo,
+                attributes: {
+                  exclude: [
+                    "citizenCardNo",
+                    "imageWithCard",
+                    "cardImage",
+                    "bankAccountNo",
+                    "bankAccountImage",
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      });
+      orders.push(order);
+    }
+
+    res.status(200).json({ orders });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// TODO: Get order by status complete
+exports.getOrderByStatusComplete = async (req, res, next) => {
+  try {
+    const post = await Post.findAll({ where: { userId: req.user.id } });
+    if (!post) {
+      return res.status(400).json({ message: "post not found" });
+    }
+
+    let orders = [];
+    for (const postId of post) {
+      const { id } = postId;
+      const order = await Order.findAll({
+        where: { status: "COMPLETE", postId: id },
+        include: [
+          {
+            model: Post,
+            include: {
+              model: User,
+              attributes: [
+                "id",
+                "firstName",
+                "lastName",
+                "telephoneNo",
+                "dateOfBirth",
+                "profileImage",
+              ],
+              include: {
+                model: FreelanceInfo,
+                attributes: {
+                  exclude: [
+                    "citizenCardNo",
+                    "imageWithCard",
+                    "cardImage",
+                    "bankAccountNo",
+                    "bankAccountImage",
+                  ],
+                },
+              },
+            },
+          },
+        ],
+      });
+      orders.push(order);
+    }
+
+    res.status(200).json({ orders });
+  } catch (err) {
+    next(err);
+  }
+};
 
 exports.getOrderById = async (req, res, next) => {
   try {

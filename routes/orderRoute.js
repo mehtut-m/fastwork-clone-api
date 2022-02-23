@@ -7,10 +7,30 @@ const {
   userReview,
   getOrderById,
   userApprove,
+  getOrderByStatusWorking,
+  getOrderByStatusReview,
+  getOrderByStatusComplete,
 } = require("../controllers/orderController");
 const upload = require("../middlewares/upload");
 
 const router = express.Router();
+
+// TODO: Get order by status working
+router.get(
+  "/get-order-by-status-working",
+  authenticate,
+  getOrderByStatusWorking
+);
+
+// TODO: Get order by status review
+router.get("/get-order-by-status-review", authenticate, getOrderByStatusReview);
+
+// TODO: Get order by status complete
+router.get(
+  "/get-order-by-status-complete",
+  authenticate,
+  getOrderByStatusComplete
+);
 
 // TODO: Get order by id
 router.get("/:orderId", authenticate, getOrderById);
