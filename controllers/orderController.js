@@ -75,6 +75,10 @@ exports.createOrder = async (req, res, next) => {
       return res.status(400).json({ message: "post not found" });
     }
 
+    // ? Create deadline
+    const deadline = new Date();
+    deadline.setDate(deadline.getDate() + package.duration);
+
     // * Create order
     const order = await Order.create(
       {
@@ -83,7 +87,7 @@ exports.createOrder = async (req, res, next) => {
         packageId,
         paymentId: new Date().getTime(), // ! payment
         paymentDate: new Date(),
-        durationCount: package.duration,
+        deadlineDate: deadline,
         reviseCount: package.revise,
         requirement,
       },
@@ -161,7 +165,7 @@ exports.updateStatusToReview = async (req, res, next) => {
 
     // ? Find order
     const order = await Order.findOne(
-      { where: { id: orderId } },
+      { where: { id: orderId, status: "WORKING" } },
       { transaction }
     );
     if (!order) {
@@ -215,11 +219,11 @@ exports.updateStatusToReview = async (req, res, next) => {
   }
 };
 
-// TODO: User review
+// TODO: User reject
 exports.userReview = async (req, res, next) => {
+  const transaction = await sequelize.transaction();
   try {
-    const { orderId } = req.params;
-    const { revise, comment } = req.body;
+    const { comment, orderId } = req.body;
 
     // ? Validate order id
     if (typeof orderId !== "string" || orderId.trim() === "") {
@@ -227,7 +231,89 @@ exports.userReview = async (req, res, next) => {
     }
 
     // ? Find order
-    const order = await Order.findOne({ where: { id: orderId } });
+    const order = await Order.findOne(
+      {
+        where: { id: orderId, status: "REVIEW" },
+      },
+      { transaction }
+    );
+    if (!order) {
+      return res.status(400).json({ message: "order not found" });
+    }
+
+    // ? Find user form post
+    const user = await User.findOne(
+      { where: { id: order.buyerId } },
+      { transaction }
+    );
+    if (!user) {
+      return res.status(400).json({ message: "user not found" });
+    }
+
+    // ? Validate user
+    if (req.user.id !== user.id) {
+      return res.status(403).json({ message: "You cannot review this order" });
+    }
+
+    // ? If user need to revise
+    if (order.reviseCount > 0) {
+      // * Update order
+      await order.update(
+        {
+          status: "WORKING",
+          reviseCount: order.reviseCount - 1,
+        },
+        { transaction }
+      );
+
+      let tmp;
+
+      if (req.file) {
+        tmp = await uploadPromise(req.file.path);
+        fs.unlinkSync(req.file.path);
+      }
+
+      const orderDetail = await OrderDetail.create(
+        {
+          orderId,
+          userId: req.user.id,
+          submitDate: new Date(),
+          url: tmp && tmp.secure_url,
+          comment: comment ?? null,
+        },
+        { transaction }
+      );
+
+      await transaction.commit();
+      return res
+        .status(200)
+        .json({ message: "Reject work for revise", order, orderDetail });
+    }
+
+    // ? If revise count = 0
+    if (order.reviseCount < 1) {
+      return res.status(200).json({ message: "You revise count not enough" });
+    }
+  } catch (err) {
+    await transaction.rollback();
+    next(err);
+  }
+};
+
+// TODO: User approve
+exports.userApprove = async (req, res, next) => {
+  try {
+    const { orderId } = req.params;
+
+    // ? Validate order id
+    if (typeof orderId !== "string" || orderId.trim() === "") {
+      return res.status(400).json({ message: "order id is require" });
+    }
+
+    // ? Find order
+    const order = await Order.findOne({
+      where: { id: orderId, status: "REVIEW" },
+    });
     if (!order) {
       return res.status(400).json({ message: "order not found" });
     }
@@ -243,43 +329,14 @@ exports.userReview = async (req, res, next) => {
       return res.status(403).json({ message: "You cannot review this order" });
     }
 
-    // ? Validate status
-    if (typeof revise !== "boolean") {
-      return res.status(400).json({ message: "revise is require" });
-    }
-
-    // ? If user need to revise
-    if (revise === true && order.reviseCount > 0) {
-      // * Update order
-      await order.update({
-        status: "WORKING",
-        reviseCount: order.reviseCount - 1,
-      });
-
-      const orderDetail = await OrderDetail.create({
-        orderId,
-        userId: req.user.id,
-        comment: comment ?? null,
-      });
-      return res
-        .status(200)
-        .json({ message: "Reject work for revise", order, orderDetail });
-    }
-
-    // ? If revise count = 0
-    if (order.reviseCount < 1) {
-      return res.status(200).json({ message: "You revise count not enough" });
-    }
-
     // ? If user happy to finish order
-    if (revise === false) {
-      // * Update order
-      await order.update({
-        status: "COMPLETE",
-        completeDate: new Date(),
-      });
-      return res.status(200).json({ message: "Complete", order });
-    }
+    // * Update order
+    await order.update({
+      status: "COMPLETE",
+      completeDate: new Date(),
+    });
+
+    res.status(200).json({ message: "Complete", order });
   } catch (err) {
     next(err);
   }

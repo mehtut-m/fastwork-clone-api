@@ -59,8 +59,8 @@ module.exports = {
       complete_date: {
         type: Sequelize.DataTypes.DATE,
       },
-      duration_count: {
-        type: Sequelize.DataTypes.INTEGER,
+      deadline_date: {
+        type: Sequelize.DataTypes.DATE,
         allowNull: false,
       },
       revise_count: {

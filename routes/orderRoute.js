@@ -6,6 +6,7 @@ const {
   updateStatusToReview,
   userReview,
   getOrderById,
+  userApprove,
 } = require("../controllers/orderController");
 const upload = require("../middlewares/upload");
 
@@ -30,7 +31,15 @@ router.patch(
 // TODO: Order Checkout
 router.post("/checkout/:id", authenticate, userReview);
 
-// TODO: User review
-router.patch("/review/:orderId", authenticate, userReview);
+// TODO: User reject
+router.patch(
+  "/review/reject",
+  upload.single("image"),
+  authenticate,
+  userReview
+);
+
+// TODO: User approve
+router.patch("/review/approve/:orderId", authenticate, userApprove);
 
 module.exports = router;

@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
       completeDate: {
         type: DataTypes.DATE,
       },
-      durationCount: {
-        type: DataTypes.INTEGER,
+      deadlineDate: {
+        type: DataTypes.DATE,
         allowNull: false,
       },
       reviseCount: {
