@@ -531,7 +531,7 @@ exports.addPackage = async (req, res, next) => {
         }
 
         // ? Validate price
-        if (typeof price !== "number") {
+        if (typeof price !== "string" || price.trim() === "") {
           return res.status(400).json({ message: "invalid price" });
         }
 
