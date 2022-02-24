@@ -16,163 +16,65 @@ const {
 // TODO: Function upload image to cloudinary
 const uploadPromise = util.promisify(cloudinary.uploader.upload);
 
-// TODO: Get order by status working from freelance
-exports.getOrderByStatusWorkingFromFreelance = async (req, res, next) => {
+// TODO: Get order by status from freelance
+exports.getOrderByStatusFromFreelance = async (req, res, next) => {
   try {
-    const order = await Order.findAll({
-      where: { status: "WORKING", sellerId: req.user.id },
-      include: [
-        {
-          as: "seller",
-          model: User,
-          attributes: [
-            "id",
-            "firstName",
-            "lastName",
-            "telephoneNo",
-            "dateOfBirth",
-            "profileImage",
-          ],
-        },
-      ],
-    });
+    const { status } = req.body;
+    let orders = [];
+    for (condition of status) {
+      const order = await Order.findAll({
+        where: { status: condition, sellerId: req.user.id },
+        include: [
+          {
+            as: "seller",
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
+          },
+        ],
+      });
+      orders.push(order);
+    }
 
-    res.status(200).json({ order });
+    res.status(200).json({ orders });
   } catch (err) {
     next(err);
   }
 };
 
-// TODO: Get order by status review from freelance
-exports.getOrderByStatusReviewFromFreelance = async (req, res, next) => {
+// TODO: Get order by status from buyer
+exports.getOrderByStatusFromUser = async (req, res, next) => {
   try {
-    const order = await Order.findAll({
-      where: { status: "REVIEW", sellerId: req.user.id },
-      include: [
-        {
-          as: "seller",
-          model: User,
-          attributes: [
-            "id",
-            "firstName",
-            "lastName",
-            "telephoneNo",
-            "dateOfBirth",
-            "profileImage",
-          ],
-        },
-      ],
-    });
+    const { status } = req.body;
+    let orders = [];
+    for (condition of status) {
+      const order = await Order.findAll({
+        where: { status: condition, buyerId: req.user.id },
+        include: [
+          {
+            as: "seller",
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
+          },
+        ],
+      });
+      orders.push(order);
+    }
 
-    res.status(200).json({ order });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// TODO: Get order by status complete from freelance
-exports.getOrderByStatusCompleteFromFreelance = async (req, res, next) => {
-  try {
-    const order = await Order.findAll({
-      where: { status: "COMPLETE", sellerId: req.user.id },
-      include: [
-        {
-          as: "seller",
-          model: User,
-          attributes: [
-            "id",
-            "firstName",
-            "lastName",
-            "telephoneNo",
-            "dateOfBirth",
-            "profileImage",
-          ],
-        },
-      ],
-    });
-
-    res.status(200).json({ order });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// TODO: Get order by status working from buyer
-exports.getOrderByStatusWorkingFromUser = async (req, res, next) => {
-  try {
-    const order = await Order.findAll({
-      where: { status: "WORKING", buyerId: req.user.id },
-      include: [
-        {
-          as: "buyer",
-          model: User,
-          attributes: [
-            "id",
-            "firstName",
-            "lastName",
-            "telephoneNo",
-            "dateOfBirth",
-            "profileImage",
-          ],
-        },
-      ],
-    });
-
-    res.status(200).json({ order });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// TODO: Get order by status review from buyer
-exports.getOrderByStatusReviewFromUser = async (req, res, next) => {
-  try {
-    const order = await Order.findAll({
-      where: { status: "REVIEW", buyerId: req.user.id },
-      include: [
-        {
-          as: "buyer",
-          model: User,
-          attributes: [
-            "id",
-            "firstName",
-            "lastName",
-            "telephoneNo",
-            "dateOfBirth",
-            "profileImage",
-          ],
-        },
-      ],
-    });
-
-    res.status(200).json({ order });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// TODO: Get order by status complete from user
-exports.getOrderByStatusCompleteFromUser = async (req, res, next) => {
-  try {
-    const order = await Order.findAll({
-      where: { status: "COMPLETE", buyerId: req.user.id },
-      include: [
-        {
-          as: "buyer",
-          model: User,
-          attributes: [
-            "id",
-            "firstName",
-            "lastName",
-            "telephoneNo",
-            "dateOfBirth",
-            "profileImage",
-          ],
-        },
-      ],
-    });
-
-    res.status(200).json({ order });
+    res.status(200).json({ orders });
   } catch (err) {
     next(err);
   }
