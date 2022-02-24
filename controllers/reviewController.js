@@ -17,8 +17,9 @@ exports.getReviewRating = async (req, res, next) => {
 
     const ratings = review.map((item) => item.rating);
 
-    const rating =
-      ratings.reduce((acc, result) => acc + result, 0) / ratings.length;
+    const rating = (
+      ratings.reduce((acc, result) => acc + result, 0) / ratings.length
+    ).toFixed(1);
 
     res.status(200).json({ rating });
   } catch (err) {
@@ -88,7 +89,7 @@ exports.editReview = async (req, res, next) => {
     }
 
     // ? Validate user
-    if (req.user.id !== review.buyerId) {
+    if (req.user.id !== review.userId) {
       return res.status(400).json({ message: "you do not have permission " });
     }
 
@@ -133,7 +134,7 @@ exports.deleteReview = async (req, res, next) => {
     }
 
     // ? Validate user
-    if (req.user.id !== review.buyerId || req.user.role !== "ADMIN") {
+    if (req.user.id !== review.userId && req.user.role !== "ADMIN") {
       return res.status(400).json({ message: "you do not have permission " });
     }
 
