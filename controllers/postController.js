@@ -12,6 +12,7 @@ const {
   User,
   Address,
   Bank,
+  Review,
 } = require("../models");
 const validator = require("validator");
 
@@ -155,6 +156,9 @@ exports.getPostById = async (req, res, next) => {
         },
         {
           model: Package,
+        },
+        {
+          model: Review,
         },
       ],
     });

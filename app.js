@@ -10,6 +10,7 @@ const userRoute = require("./routes/userRoute");
 const orderRoute = require("./routes/orderRoute");
 const checkoutRoute = require("./routes/checkoutRoute");
 const adminRoute = require("./routes/adminRoute");
+const reviewRoute = require("./routes/reviewRoute");
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use("/user", userRoute);
 app.use("/orders", orderRoute);
 app.use("/checkout", checkoutRoute);
 app.use("/admin", adminRoute);
+app.use("/reviews", reviewRoute);
 
 app.use((req, res) => {
   res.status(404).json("Resource not found on this server");
