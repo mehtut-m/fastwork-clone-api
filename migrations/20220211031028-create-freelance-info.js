@@ -83,7 +83,7 @@ module.exports = {
         },
       },
       bank_account_no: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: Sequelize.DataTypes.STRING,
         allowNull: false,
         unique: true,
       },

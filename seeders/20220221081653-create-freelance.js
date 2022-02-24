@@ -50,6 +50,25 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        user_id: 3,
+        first_name: "Sage",
+        last_name: "Bergrin",
+        display_name: "Ma Ma Ma",
+        profile_desc:
+          "บัณฑิตคณะสถาปัตยกรรมศาสตร์สาขาภูมิสถาปัตยกรรม ถนัดการใช้ Photoshop, Illustrator และ Procreate รับงานวาดรูปการ์ตูน, วาดภาพประกอบหนังสือ, ปกนิยาย, โปสการ์ด, เพจ, fanart ฯลฯ รับตัดต่อรูป ตกแต่ง perspective ออกแบบ Infographic สามารถสอบถามได้ก่อนค่ะ",
+        citizen_card_no: "1658953328365",
+        citizen_address_id: 4,
+        current_address_id: 4,
+        image_with_card: "https://picsum.photos/id/7/200/300",
+        card_image: "https://picsum.photos/id/8/200/300",
+        bank_id: 3,
+        bank_account_no: "237591842",
+        bank_account_image: "https://picsum.photos/id/9/200/300",
+        status: "SUBMIT",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 
