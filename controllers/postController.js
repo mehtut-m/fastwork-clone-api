@@ -592,6 +592,8 @@ exports.toggleIsActivePost = async (req, res, next) => {
       await post.update({ isActive: false });
       return res.status(200).json({ post });
     }
+
+    res.status(400).json({ message: "something wrong" });
   } catch (err) {
     next(err);
   }
