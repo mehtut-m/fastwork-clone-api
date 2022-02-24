@@ -561,10 +561,37 @@ exports.addPackage = async (req, res, next) => {
   }
 };
 
-// ! NOT FINISH
 // TODO: Change status post to APPROVE OR REJECT
-exports.changeStatusPost = async (req, res, next) => {
+exports.toggleIsActivePost = async (req, res, next) => {
   try {
+    const { postId } = req.params;
+
+    // ? Validate post id
+    if (typeof postId !== "string" || postId.trim() === "") {
+      return res.status(400).json({ message: "post id is require" });
+    }
+
+    // ? Find post
+    const post = await Post.findOne({
+      where: { id: postId, status: "APPROVE" },
+    });
+    if (!post) {
+      return res.status(400).json({ message: "post not found" });
+    }
+
+    if (req.user.id !== post.userId) {
+      return res.status(400).json({ message: "You do not have permission" });
+    }
+
+    if (post.isActive === false) {
+      await post.update({ isActive: true });
+      return res.status(200).json({ post });
+    }
+
+    if (post.isActive === true) {
+      await post.update({ isActive: false });
+      return res.status(200).json({ post });
+    }
   } catch (err) {
     next(err);
   }

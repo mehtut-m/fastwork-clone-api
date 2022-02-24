@@ -11,7 +11,7 @@ const {
   getPostById,
   getPostByCategories,
   getPostBySubCategories,
-  changeStatusPost,
+  toggleIsActivePost,
 } = require("../controllers/postController");
 
 const router = express.Router();
@@ -43,8 +43,7 @@ router.patch("/instruction", authenticate, addInstruction);
 // TODO: Add Package
 router.post("/package", authenticate, addPackage);
 
-// ! NOT FINISH
-// TODO: Change status post to APPROVE OR REJECT
-router.patch("/review", authenticate, changeStatusPost);
+// TODO: Toggle is active
+router.patch("/toggle/:postId", authenticate, toggleIsActivePost);
 
 module.exports = router;
