@@ -20,29 +20,30 @@ const uploadPromise = util.promisify(cloudinary.uploader.upload);
 exports.getOrderByStatusFromFreelance = async (req, res, next) => {
   try {
     const { status } = req.body;
-    let orders = [];
-    for (condition of status) {
-      const order = await Order.findAll({
-        where: { status: condition, sellerId: req.user.id },
-        include: [
-          {
-            as: "seller",
-            model: User,
-            attributes: [
-              "id",
-              "firstName",
-              "lastName",
-              "telephoneNo",
-              "dateOfBirth",
-              "profileImage",
-            ],
-          },
-        ],
-      });
-      orders.push(order);
+
+    if (status.length < 1) {
+      return res.status(400).json({ message: "status is require" });
     }
 
-    res.status(200).json({ orders });
+    const order = await Order.findAll({
+      where: { status: status, sellerId: req.user.id },
+      include: [
+        {
+          as: "seller",
+          model: User,
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "telephoneNo",
+            "dateOfBirth",
+            "profileImage",
+          ],
+        },
+      ],
+    });
+
+    res.status(200).json({ order });
   } catch (err) {
     next(err);
   }
@@ -52,29 +53,28 @@ exports.getOrderByStatusFromFreelance = async (req, res, next) => {
 exports.getOrderByStatusFromUser = async (req, res, next) => {
   try {
     const { status } = req.body;
-    let orders = [];
-    for (condition of status) {
-      const order = await Order.findAll({
-        where: { status: condition, buyerId: req.user.id },
-        include: [
-          {
-            as: "seller",
-            model: User,
-            attributes: [
-              "id",
-              "firstName",
-              "lastName",
-              "telephoneNo",
-              "dateOfBirth",
-              "profileImage",
-            ],
-          },
-        ],
-      });
-      orders.push(order);
+    if (status.length < 1) {
+      return res.status(400).json({ message: "status is require" });
     }
+    const order = await Order.findAll({
+      where: { status: status, buyerId: req.user.id },
+      include: [
+        {
+          as: "seller",
+          model: User,
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "telephoneNo",
+            "dateOfBirth",
+            "profileImage",
+          ],
+        },
+      ],
+    });
 
-    res.status(200).json({ orders });
+    res.status(200).json({ order });
   } catch (err) {
     next(err);
   }

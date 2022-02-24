@@ -15,14 +15,18 @@ const upload = require("../middlewares/upload");
 const router = express.Router();
 
 // TODO: Get order by status from freelance
-router.get(
+router.post(
   "/get-order-by-status-freelance",
   authenticate,
   getOrderByStatusFromFreelance
 );
 
 // TODO: Get order by status working from user
-router.get("/get-order-by-status-user", authenticate, getOrderByStatusFromUser);
+router.post(
+  "/get-order-by-status-user",
+  authenticate,
+  getOrderByStatusFromUser
+);
 
 // TODO: Get order by id
 router.get("/:orderId", authenticate, getOrderById);
