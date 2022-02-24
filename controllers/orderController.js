@@ -120,6 +120,28 @@ exports.getOrderById = async (req, res, next) => {
   }
 };
 
+// TODO: Get order detail image
+exports.getOrderDetailImage = async (req, res, next) => {
+  try {
+    const { orderId } = req.params;
+
+    // ? Validate order id
+    if (typeof orderId !== "string" || orderId.trim() === "") {
+      return res.status(400).json({ message: "order id is require" });
+    }
+
+    // ? Find order detail image
+    const images = await OrderDetailImage.findAll({ where: { orderId } });
+    if (!images) {
+      return res.status(400).json({ message: "order detail image not found" });
+    }
+
+    res.status(200).json({ images });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // TODO: Create order
 exports.createOrder = async (req, res, next) => {
   const transaction = await sequelize.transaction();

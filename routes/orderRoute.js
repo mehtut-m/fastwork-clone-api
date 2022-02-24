@@ -9,6 +9,7 @@ const {
   userApprove,
   getOrderByStatusFromFreelance,
   getOrderByStatusFromUser,
+  getOrderDetailImage,
 } = require("../controllers/orderController");
 const upload = require("../middlewares/upload");
 
@@ -30,6 +31,9 @@ router.post(
 
 // TODO: Get order by id
 router.get("/:orderId", authenticate, getOrderById);
+
+// TODO: Get order detail image
+router.get("/order-detail-image/:orderId", authenticate, getOrderDetailImage);
 
 // TODO: Create Order
 router.post("/order", upload.array("image", 12), authenticate, createOrder);
