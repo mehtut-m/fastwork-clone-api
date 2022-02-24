@@ -25,11 +25,11 @@ module.exports = {
           key: "id",
         },
       },
-      user_id: {
+      seller_id: {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: false,
         references: {
-          as: "user",
+          as: "seller",
           model: {
             tableName: "users",
           },

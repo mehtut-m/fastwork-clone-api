@@ -1,6 +1,6 @@
-const fs = require('fs');
-const util = require('util');
-const cloudinary = require('cloudinary').v2;
+const fs = require("fs");
+const util = require("util");
+const cloudinary = require("cloudinary").v2;
 const {
   Package,
   Post,
@@ -10,252 +10,71 @@ const {
   OrderDetail,
   User,
   FreelanceInfo,
-} = require('../models');
+  OrderDetailImage,
+} = require("../models");
 
 // TODO: Function upload image to cloudinary
 const uploadPromise = util.promisify(cloudinary.uploader.upload);
 
-// TODO: Get order by status working from freelance
-exports.getOrderByStatusWorkingFromFreelance = async (req, res, next) => {
+// TODO: Get order by status from freelance
+exports.getOrderByStatusFromFreelance = async (req, res, next) => {
   try {
-    const order = await Order.findAll({
-      where: { status: 'WORKING', userId: req.user.id },
-      include: [
-        {
-          model: Post,
-          include: {
+    const { status } = req.body;
+    let orders = [];
+    for (condition of status) {
+      const order = await Order.findAll({
+        where: { status: condition, sellerId: req.user.id },
+        include: [
+          {
+            as: "seller",
             model: User,
             attributes: [
-              'id',
-              'firstName',
-              'lastName',
-              'telephoneNo',
-              'dateOfBirth',
-              'profileImage',
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
             ],
-            include: {
-              model: FreelanceInfo,
-              attributes: {
-                exclude: [
-                  'citizenCardNo',
-                  'imageWithCard',
-                  'cardImage',
-                  'bankAccountNo',
-                  'bankAccountImage',
-                ],
-              },
-            },
           },
-        },
-      ],
-    });
+        ],
+      });
+      orders.push(order);
+    }
 
-    res.status(200).json({ order });
+    res.status(200).json({ orders });
   } catch (err) {
     next(err);
   }
 };
 
-// TODO: Get order by status review from freelance
-exports.getOrderByStatusReviewFromFreelance = async (req, res, next) => {
+// TODO: Get order by status from buyer
+exports.getOrderByStatusFromUser = async (req, res, next) => {
   try {
-    const order = await Order.findAll({
-      where: { status: 'REVIEW', userId: req.user.id },
-      include: [
-        {
-          model: Post,
-          include: {
+    const { status } = req.body;
+    let orders = [];
+    for (condition of status) {
+      const order = await Order.findAll({
+        where: { status: condition, buyerId: req.user.id },
+        include: [
+          {
+            as: "seller",
             model: User,
             attributes: [
-              'id',
-              'firstName',
-              'lastName',
-              'telephoneNo',
-              'dateOfBirth',
-              'profileImage',
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
             ],
-            include: {
-              model: FreelanceInfo,
-              attributes: {
-                exclude: [
-                  'citizenCardNo',
-                  'imageWithCard',
-                  'cardImage',
-                  'bankAccountNo',
-                  'bankAccountImage',
-                ],
-              },
-            },
           },
-        },
-      ],
-    });
+        ],
+      });
+      orders.push(order);
+    }
 
-    res.status(200).json({ order });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// TODO: Get order by status complete from freelance
-exports.getOrderByStatusCompleteFromFreelance = async (req, res, next) => {
-  try {
-    const order = await Order.findAll({
-      where: { status: 'COMPLETE', userId: req.user.id },
-      include: [
-        {
-          model: Post,
-          include: {
-            model: User,
-            attributes: [
-              'id',
-              'firstName',
-              'lastName',
-              'telephoneNo',
-              'dateOfBirth',
-              'profileImage',
-            ],
-            include: {
-              model: FreelanceInfo,
-              attributes: {
-                exclude: [
-                  'citizenCardNo',
-                  'imageWithCard',
-                  'cardImage',
-                  'bankAccountNo',
-                  'bankAccountImage',
-                ],
-              },
-            },
-          },
-        },
-      ],
-    });
-
-    res.status(200).json({ order });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// TODO: Get order by status working from buyer
-exports.getOrderByStatusWorkingFromUser = async (req, res, next) => {
-  try {
-    const order = await Order.findAll({
-      where: { status: 'WORKING', buyerId: req.user.id },
-      include: [
-        {
-          model: Post,
-          include: {
-            model: User,
-            attributes: [
-              'id',
-              'firstName',
-              'lastName',
-              'telephoneNo',
-              'dateOfBirth',
-              'profileImage',
-            ],
-            include: {
-              model: FreelanceInfo,
-              attributes: {
-                exclude: [
-                  'citizenCardNo',
-                  'imageWithCard',
-                  'cardImage',
-                  'bankAccountNo',
-                  'bankAccountImage',
-                ],
-              },
-            },
-          },
-        },
-      ],
-    });
-
-    res.status(200).json({ order });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// TODO: Get order by status review from buyer
-exports.getOrderByStatusReviewFromUser = async (req, res, next) => {
-  try {
-    const order = await Order.findAll({
-      where: { status: 'REVIEW', buyerId: req.user.id },
-      include: [
-        {
-          model: Post,
-          include: {
-            model: User,
-            attributes: [
-              'id',
-              'firstName',
-              'lastName',
-              'telephoneNo',
-              'dateOfBirth',
-              'profileImage',
-            ],
-            include: {
-              model: FreelanceInfo,
-              attributes: {
-                exclude: [
-                  'citizenCardNo',
-                  'imageWithCard',
-                  'cardImage',
-                  'bankAccountNo',
-                  'bankAccountImage',
-                ],
-              },
-            },
-          },
-        },
-      ],
-    });
-
-    res.status(200).json({ order });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// TODO: Get order by status complete from user
-exports.getOrderByStatusCompleteFromUser = async (req, res, next) => {
-  try {
-    const order = await Order.findAll({
-      where: { status: 'COMPLETE', buyerId: req.user.id },
-      include: [
-        {
-          model: Post,
-          include: {
-            model: User,
-            attributes: [
-              'id',
-              'firstName',
-              'lastName',
-              'telephoneNo',
-              'dateOfBirth',
-              'profileImage',
-            ],
-            include: {
-              model: FreelanceInfo,
-              attributes: {
-                exclude: [
-                  'citizenCardNo',
-                  'imageWithCard',
-                  'cardImage',
-                  'bankAccountNo',
-                  'bankAccountImage',
-                ],
-              },
-            },
-          },
-        },
-      ],
-    });
-
-    res.status(200).json({ order });
+    res.status(200).json({ orders });
   } catch (err) {
     next(err);
   }
@@ -267,8 +86,8 @@ exports.getOrderById = async (req, res, next) => {
     const { orderId } = req.params;
 
     // ? Validate order id
-    if (typeof orderId !== 'string' || orderId.trim() === '') {
-      return res.status(400).json({ message: 'order id is require' });
+    if (typeof orderId !== "string" || orderId.trim() === "") {
+      return res.status(400).json({ message: "order id is require" });
     }
 
     const order = await Order.findOne({
@@ -280,7 +99,7 @@ exports.getOrderById = async (req, res, next) => {
       ],
     });
     if (!order) {
-      return res.status(400).json({ message: 'order not found' });
+      return res.status(400).json({ message: "order not found" });
     }
 
     res.status(200).json({ order });
@@ -295,13 +114,13 @@ exports.createOrder = async (req, res, next) => {
   try {
     const { packageId, requirement, paymentId, paymentDate } = req.body;
     // ? Validate package id
-    if (typeof packageId !== 'string' || packageId.trim() === '') {
-      return res.status(400).json({ message: 'package id is require' });
+    if (typeof packageId !== "string" || packageId.trim() === "") {
+      return res.status(400).json({ message: "package id is require" });
     }
 
     // ? Validate requirement
-    if (typeof requirement !== 'string' || requirement.trim() === '') {
-      return res.status(400).json({ message: 'requirement is require' });
+    if (typeof requirement !== "string" || requirement.trim() === "") {
+      return res.status(400).json({ message: "requirement is require" });
     }
 
     // ? Find package
@@ -310,7 +129,7 @@ exports.createOrder = async (req, res, next) => {
       { transaction }
     );
     if (!package) {
-      return res.status(400).json({ message: 'package not found' });
+      return res.status(400).json({ message: "package not found" });
     }
 
     // ? Find post
@@ -319,7 +138,7 @@ exports.createOrder = async (req, res, next) => {
       { transaction }
     );
     if (!post) {
-      return res.status(400).json({ message: 'post not found' });
+      return res.status(400).json({ message: "post not found" });
     }
 
     // ? Create deadline
@@ -330,7 +149,7 @@ exports.createOrder = async (req, res, next) => {
     const order = await Order.create(
       {
         buyerId: req.user.id,
-        userId: post.userId,
+        sellerId: post.userId,
         postId: post.id,
         packageId,
         paymentId: paymentId,
@@ -347,7 +166,7 @@ exports.createOrder = async (req, res, next) => {
 
     // ? Validate image
     if (req.files.length > 3) {
-      return res.status(400).json({ message: 'maximum of image equal 3 ' });
+      return res.status(400).json({ message: "maximum of image equal 3 " });
     }
 
     // * Create order image
@@ -368,7 +187,7 @@ exports.createOrder = async (req, res, next) => {
     }
 
     await transaction.commit();
-    res.status(201).json({ message: 'create order', order, tmp });
+    res.status(201).json({ message: "create order", order, tmp });
   } catch (err) {
     await transaction.rollback();
     next(err);
@@ -381,20 +200,20 @@ exports.updateStatusToWork = async (req, res, next) => {
     const { orderId } = req.params;
 
     // ? Validate order id
-    if (typeof orderId !== 'string' || orderId.trim() === '') {
-      return res.status(400).json({ message: 'order id is require' });
+    if (typeof orderId !== "string" || orderId.trim() === "") {
+      return res.status(400).json({ message: "order id is require" });
     }
 
     // ? Find order
     const order = await Order.findOne({ where: { id: orderId } });
     if (!order) {
-      return res.status(400).json({ message: 'order not found' });
+      return res.status(400).json({ message: "order not found" });
     }
 
     // * update order
-    await order.update({ status: 'WORKING' });
+    await order.update({ status: "WORKING" });
 
-    res.status(200).json({ message: 'update status order to work', order });
+    res.status(200).json({ message: "update status order to work", order });
   } catch (err) {
     next(err);
   }
@@ -407,17 +226,17 @@ exports.updateStatusToReview = async (req, res, next) => {
     const { orderId, comment } = req.body;
 
     // ? Validate order id
-    if (typeof orderId !== 'string' || orderId.trim() === '') {
-      return res.status(400).json({ message: 'order id is require' });
+    if (typeof orderId !== "string" || orderId.trim() === "") {
+      return res.status(400).json({ message: "order id is require" });
     }
 
     // ? Find order
     const order = await Order.findOne(
-      { where: { id: orderId, status: 'WORKING' } },
+      { where: { id: orderId, status: "WORKING" } },
       { transaction }
     );
     if (!order) {
-      return res.status(400).json({ message: 'order not found' });
+      return res.status(400).json({ message: "order not found" });
     }
 
     // ? Find post id for find user
@@ -426,41 +245,54 @@ exports.updateStatusToReview = async (req, res, next) => {
       { transaction }
     );
     if (!post) {
-      return res.status(400).json({ message: 'post not found' });
+      return res.status(400).json({ message: "post not found" });
     }
 
     // ? Find user
     if (req.user.id !== post.userId) {
-      return res.status(403).json({ message: 'You cannot submit this order' });
+      return res.status(403).json({ message: "You cannot submit this order" });
     }
 
     // * Update order
-    await order.update({ status: 'REVIEW' }, { transaction });
-
-    let tmp;
-
-    if (req.file) {
-      tmp = await uploadPromise(req.file.path);
-      fs.unlinkSync(req.file.path);
-    }
-
-    console.log(tmp.secure_url);
+    await order.update({ status: "REVIEW" }, { transaction });
 
     const orderDetail = await OrderDetail.create(
       {
         orderId,
         userId: req.user.id,
         submitDate: new Date(),
-        url: tmp && tmp.secure_url,
         comment: comment ?? null,
       },
       { transaction }
     );
 
+    // ? Upload image
+    let result = {};
+    let tmp = [];
+
+    if (req.files) {
+      for (const file of req.files) {
+        const { path } = file;
+        result = await uploadPromise(path);
+        fs.unlinkSync(path);
+        const orderDetailImage = await OrderDetailImage.create(
+          {
+            orderDetailId: orderDetail.id,
+            url: result.secure_url,
+          },
+          { transaction }
+        );
+        tmp.push(orderDetailImage);
+      }
+    }
+
     await transaction.commit();
-    res
-      .status(200)
-      .json({ message: 'update status order to review', order, orderDetail });
+    res.status(200).json({
+      message: "update status order to review",
+      order,
+      orderDetail,
+      tmp,
+    });
   } catch (err) {
     await transaction.rollback();
     next(err);
@@ -468,25 +300,25 @@ exports.updateStatusToReview = async (req, res, next) => {
 };
 
 // TODO: User reject
-exports.userReview = async (req, res, next) => {
+exports.userReject = async (req, res, next) => {
   const transaction = await sequelize.transaction();
   try {
     const { comment, orderId } = req.body;
 
     // ? Validate order id
-    if (typeof orderId !== 'string' || orderId.trim() === '') {
-      return res.status(400).json({ message: 'order id is require' });
+    if (typeof orderId !== "string" || orderId.trim() === "") {
+      return res.status(400).json({ message: "order id is require" });
     }
 
     // ? Find order
     const order = await Order.findOne(
       {
-        where: { id: orderId, status: 'REVIEW' },
+        where: { id: orderId, status: "REVIEW" },
       },
       { transaction }
     );
     if (!order) {
-      return res.status(400).json({ message: 'order not found' });
+      return res.status(400).json({ message: "order not found" });
     }
 
     // ? Find user form post
@@ -495,12 +327,12 @@ exports.userReview = async (req, res, next) => {
       { transaction }
     );
     if (!user) {
-      return res.status(400).json({ message: 'user not found' });
+      return res.status(400).json({ message: "user not found" });
     }
 
     // ? Validate user
     if (req.user.id !== user.id) {
-      return res.status(403).json({ message: 'You cannot review this order' });
+      return res.status(403).json({ message: "You cannot review this order" });
     }
 
     // ? If user need to revise
@@ -508,39 +340,51 @@ exports.userReview = async (req, res, next) => {
       // * Update order
       await order.update(
         {
-          status: 'WORKING',
+          status: "WORKING",
           reviseCount: order.reviseCount - 1,
         },
         { transaction }
       );
-
-      let tmp;
-
-      if (req.file) {
-        tmp = await uploadPromise(req.file.path);
-        fs.unlinkSync(req.file.path);
-      }
 
       const orderDetail = await OrderDetail.create(
         {
           orderId,
           userId: req.user.id,
           submitDate: new Date(),
-          url: tmp && tmp.secure_url,
           comment: comment ?? null,
         },
         { transaction }
       );
 
+      // ? Upload image
+      let result = {};
+      let tmp = [];
+
+      if (req.files) {
+        for (const file of req.files) {
+          const { path } = file;
+          result = await uploadPromise(path);
+          fs.unlinkSync(path);
+          const orderDetailImage = await OrderDetailImage.create(
+            {
+              orderDetailId: orderDetail.id,
+              url: result.secure_url,
+            },
+            { transaction }
+          );
+          tmp.push(orderDetailImage);
+        }
+      }
+
       await transaction.commit();
       return res
         .status(200)
-        .json({ message: 'Reject work for revise', order, orderDetail });
+        .json({ message: "Reject work for revise", order, orderDetail, tmp });
     }
 
     // ? If revise count = 0
     if (order.reviseCount < 1) {
-      return res.status(200).json({ message: 'You revise count not enough' });
+      return res.status(200).json({ message: "You revise count not enough" });
     }
   } catch (err) {
     await transaction.rollback();
@@ -554,37 +398,37 @@ exports.userApprove = async (req, res, next) => {
     const { orderId } = req.params;
 
     // ? Validate order id
-    if (typeof orderId !== 'string' || orderId.trim() === '') {
-      return res.status(400).json({ message: 'order id is require' });
+    if (typeof orderId !== "string" || orderId.trim() === "") {
+      return res.status(400).json({ message: "order id is require" });
     }
 
     // ? Find order
     const order = await Order.findOne({
-      where: { id: orderId, status: 'REVIEW' },
+      where: { id: orderId, status: "REVIEW" },
     });
     if (!order) {
-      return res.status(400).json({ message: 'order not found' });
+      return res.status(400).json({ message: "order not found" });
     }
 
     // ? Find user form post
     const user = await User.findOne({ where: { id: order.buyerId } });
     if (!user) {
-      return res.status(400).json({ message: 'user not found' });
+      return res.status(400).json({ message: "user not found" });
     }
 
     // ? Validate user
     if (req.user.id !== user.id) {
-      return res.status(403).json({ message: 'You cannot review this order' });
+      return res.status(403).json({ message: "You cannot review this order" });
     }
 
     // ? If user happy to finish order
     // * Update order
     await order.update({
-      status: 'COMPLETE',
+      status: "COMPLETE",
       completeDate: new Date(),
     });
 
-    res.status(200).json({ message: 'Complete', order });
+    res.status(200).json({ message: "Complete", order });
   } catch (err) {
     next(err);
   }

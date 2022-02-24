@@ -5,9 +5,6 @@ module.exports = (sequelize, DataTypes) => {
       submitDate: {
         type: DataTypes.DATE,
       },
-      url: {
-        type: DataTypes.STRING,
-      },
       comment: {
         type: DataTypes.TEXT,
       },
@@ -26,6 +23,12 @@ module.exports = (sequelize, DataTypes) => {
     OrderDetail.belongsTo(models.User, {
       foreignKey: {
         name: "userId",
+        allowNull: false,
+      },
+    });
+    OrderDetail.hasMany(models.OrderDetailImage, {
+      foreignKey: {
+        name: "orderDetailId",
         allowNull: false,
       },
     });
