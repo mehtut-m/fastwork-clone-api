@@ -10,6 +10,7 @@ const {
   OrderDetail,
   User,
   FreelanceInfo,
+  OrderDetailImage,
 } = require("../models");
 
 // TODO: Function upload image to cloudinary
@@ -353,30 +354,43 @@ exports.updateStatusToReview = async (req, res, next) => {
     // * Update order
     await order.update({ status: "REVIEW" }, { transaction });
 
-    let tmp;
-
-    if (req.file) {
-      tmp = await uploadPromise(req.file.path);
-      fs.unlinkSync(req.file.path);
-    }
-
-    console.log(tmp.secure_url);
-
     const orderDetail = await OrderDetail.create(
       {
         orderId,
         userId: req.user.id,
         submitDate: new Date(),
-        url: tmp && tmp.secure_url,
         comment: comment ?? null,
       },
       { transaction }
     );
 
+    // ? Upload image
+    let result = {};
+    let tmp = [];
+
+    if (req.files) {
+      for (const file of req.files) {
+        const { path } = file;
+        result = await uploadPromise(path);
+        fs.unlinkSync(path);
+        const orderDetailImage = await OrderDetailImage.create(
+          {
+            orderDetailId: orderDetail.id,
+            url: result.secure_url,
+          },
+          { transaction }
+        );
+        tmp.push(orderDetailImage);
+      }
+    }
+
     await transaction.commit();
-    res
-      .status(200)
-      .json({ message: "update status order to review", order, orderDetail });
+    res.status(200).json({
+      message: "update status order to review",
+      order,
+      orderDetail,
+      tmp,
+    });
   } catch (err) {
     await transaction.rollback();
     next(err);
@@ -384,7 +398,7 @@ exports.updateStatusToReview = async (req, res, next) => {
 };
 
 // TODO: User reject
-exports.userReview = async (req, res, next) => {
+exports.userReject = async (req, res, next) => {
   const transaction = await sequelize.transaction();
   try {
     const { comment, orderId } = req.body;
@@ -430,28 +444,40 @@ exports.userReview = async (req, res, next) => {
         { transaction }
       );
 
-      let tmp;
-
-      if (req.file) {
-        tmp = await uploadPromise(req.file.path);
-        fs.unlinkSync(req.file.path);
-      }
-
       const orderDetail = await OrderDetail.create(
         {
           orderId,
           userId: req.user.id,
           submitDate: new Date(),
-          url: tmp && tmp.secure_url,
           comment: comment ?? null,
         },
         { transaction }
       );
 
+      // ? Upload image
+      let result = {};
+      let tmp = [];
+
+      if (req.files) {
+        for (const file of req.files) {
+          const { path } = file;
+          result = await uploadPromise(path);
+          fs.unlinkSync(path);
+          const orderDetailImage = await OrderDetailImage.create(
+            {
+              orderDetailId: orderDetail.id,
+              url: result.secure_url,
+            },
+            { transaction }
+          );
+          tmp.push(orderDetailImage);
+        }
+      }
+
       await transaction.commit();
       return res
         .status(200)
-        .json({ message: "Reject work for revise", order, orderDetail });
+        .json({ message: "Reject work for revise", order, orderDetail, tmp });
     }
 
     // ? If revise count = 0
