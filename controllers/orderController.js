@@ -293,7 +293,7 @@ exports.getOrderById = async (req, res, next) => {
 exports.createOrder = async (req, res, next) => {
   const transaction = await sequelize.transaction();
   try {
-    const { packageId, requirement } = req.body;
+    const { packageId, requirement, paymentId, paymentDate } = req.body;
     // ? Validate package id
     if (typeof packageId !== 'string' || packageId.trim() === '') {
       return res.status(400).json({ message: 'package id is require' });
@@ -333,8 +333,8 @@ exports.createOrder = async (req, res, next) => {
         userId: post.userId,
         postId: post.id,
         packageId,
-        paymentId: new Date().getTime(), // ! payment
-        paymentDate: new Date(),
+        paymentId: paymentId,
+        paymentDate: paymentDate,
         deadlineDate: deadline,
         reviseCount: package.revise,
         requirement,

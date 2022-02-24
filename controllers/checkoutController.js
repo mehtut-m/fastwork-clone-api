@@ -53,11 +53,7 @@ exports.checkOutCreditCard = async (req, res, next) => {
 
     req.body.paymentId = charge.id;
     req.body.paymentDate = charge['paid_at'];
-    // const order = await Order.create(item);
-    // // // If updateOrder failed send response
-    // if (!order) {
-    //   return res.status(400).json({ message: 'transaction failed' });
-    // }
+
     next();
   } catch (err) {
     console.log(err);
