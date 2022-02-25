@@ -1,5 +1,6 @@
 const { User, FreelanceInfo } = require("../models");
 
+// TODO: Admin approve
 exports.adminApprove = async (req, res, next) => {
   try {
     const { userId } = req.params;
@@ -34,6 +35,14 @@ exports.adminApprove = async (req, res, next) => {
     });
 
     res.status(200).json({ message: "success" });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// TODO: Admin reject
+exports.adminReject = async (req, res, next) => {
+  try {
   } catch (err) {
     next(err);
   }

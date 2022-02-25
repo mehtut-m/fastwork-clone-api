@@ -107,6 +107,17 @@ exports.getOrderById = async (req, res, next) => {
       include: [
         {
           model: OrderDetail,
+          include: {
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
+          },
         },
       ],
     });
