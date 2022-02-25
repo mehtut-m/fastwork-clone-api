@@ -52,6 +52,21 @@ exports.getOrderByStatusFromFreelance = async (req, res, next) => {
             },
           },
         },
+        {
+          model: Post,
+        },
+        {
+          as: "buyer",
+          model: User,
+          attributes: [
+            "id",
+            "firstName",
+            "lastName",
+            "telephoneNo",
+            "dateOfBirth",
+            "profileImage",
+          ],
+        },
       ],
     });
 
@@ -82,6 +97,21 @@ exports.getOrderByStatusFromUser = async (req, res, next) => {
             "dateOfBirth",
             "profileImage",
           ],
+          include: {
+            model: FreelanceInfo,
+            attributes: {
+              exclude: [
+                "citizenCardNo",
+                "imageWithCard",
+                "cardImage",
+                "bankAccountNo",
+                "bankAccountImage",
+              ],
+            },
+          },
+        },
+        {
+          model: Post,
         },
       ],
     });
