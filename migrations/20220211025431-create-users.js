@@ -38,7 +38,7 @@ module.exports = {
         type: Sequelize.DataTypes.STRING,
       },
       telephone_no: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: Sequelize.DataTypes.STRING,
       },
       date_of_birth: {
         type: Sequelize.DataTypes.DATE,

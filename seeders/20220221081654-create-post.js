@@ -14,8 +14,8 @@ module.exports = {
 
     return await queryInterface.bulkInsert("posts", [
       {
-        user_id: "1",
-        sub_category_id: "1",
+        user_id: 1,
+        sub_category_id: 1,
         name: "LOGO HOUSE บ้านหลังใหญ่ของโลโก้คุณภาพ",
         description:
           "สนใจออกแบบโลโก้สวยๆ มีคุณภาพ ในราคาที่เหมาะสม สามารถทักทายเข้ามาได้เลยนะครับ",
@@ -31,8 +31,8 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        user_id: "1",
-        sub_category_id: "1",
+        user_id: 1,
+        sub_category_id: 1,
         name: "Professional Signature Logo อันดับ 1 ทันสมัยที่สุด",
         description:
           "Buttercup Graphic Design specializes in Graphic Design, Social Media, Digital Marketing & Brand Strategy to grow your business, audience and create long-lasting relationships.",
@@ -48,8 +48,8 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        user_id: "2",
-        sub_category_id: "6",
+        user_id: 1,
+        sub_category_id: 6,
         name: "รับทำ Landing Page / Sale Page / Corporate Page",
         description:
           "Landing Page , Sale Page , Corporate Page รองรับทุกหน้าจออุปกรณ์ (Responsive) ด้วยภาษา HTML / CSS / Javascript / React  ตัดไฟล์ PSD เป็นหน้า HTML หรือ React เว็บเป็นมิตรกับ SEO ",
@@ -65,8 +65,8 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        user_id: "2",
-        sub_category_id: "8",
+        user_id: 2,
+        sub_category_id: 8,
         name: "พัฒนา Application ผ่าน React native เป็นทั้ง IOS และ Android",
         description:
           "สามารถ Application ลง Store และ สามารถสอนการใช้งาน วิธีการใช้แนะนำ หรือ แก้ไขงานที่เกี่ยวข้องกับงาน React native พัฒนาให้ได้ทั้ง iOS ,Android และ Web",
