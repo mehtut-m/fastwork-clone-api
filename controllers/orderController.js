@@ -164,15 +164,15 @@ exports.getOrderById = async (req, res, next) => {
 // TODO: Get order detail image
 exports.getOrderDetailImage = async (req, res, next) => {
   try {
-    const { orderId } = req.params;
+    const { orderDetailId } = req.params;
 
     // ? Validate order id
-    if (typeof orderId !== "string" || orderId.trim() === "") {
-      return res.status(400).json({ message: "order id is require" });
+    if (typeof orderDetailId !== "string" || orderDetailId.trim() === "") {
+      return res.status(400).json({ message: "order detail id is require" });
     }
 
     // ? Find order detail image
-    const images = await OrderDetailImage.findAll({ where: { orderId } });
+    const images = await OrderDetailImage.findAll({ where: { orderDetailId } });
     if (!images) {
       return res.status(400).json({ message: "order detail image not found" });
     }

@@ -33,7 +33,11 @@ router.post(
 router.get("/:orderId", authenticate, getOrderById);
 
 // TODO: Get order detail image
-router.get("/order-detail-image/:orderId", authenticate, getOrderDetailImage);
+router.get(
+  "/order-detail-image/:orderDetailId",
+  authenticate,
+  getOrderDetailImage
+);
 
 // TODO: Create Order
 router.post("/order", upload.array("image", 12), authenticate, createOrder);
