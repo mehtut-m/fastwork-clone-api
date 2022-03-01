@@ -15,6 +15,7 @@ const {
   Review,
 } = require("../models");
 const validator = require("validator");
+const { Op } = require("sequelize");
 
 // TODO: Function upload image to cloudinary
 const uploadPromise = util.promisify(cloudinary.uploader.upload);
@@ -337,6 +338,203 @@ exports.getPostBySubCategories = async (req, res, next) => {
     if (post[0]) post[0].instruction = JSON.parse(post[0].instruction);
 
     res.status(200).json({ post });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// TODO: Get post by filter
+exports.getPostByFilter = async (req, res, next) => {
+  try {
+    const { max, min, duration } = req.query;
+
+    // ? If filter by price && duration
+    if (max && min && duration) {
+      const package = await Package.findAll({
+        where: {
+          [Op.and]: [
+            { price: { [Op.between]: [min, max] } },
+            { duration: { [Op.lte]: duration } },
+          ],
+        },
+      });
+      const postId = package.map((item) => item.postId);
+      const post = await Post.findAll({
+        where: { id: postId },
+        include: [
+          {
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
+            include: {
+              model: FreelanceInfo,
+              attributes: {
+                exclude: [
+                  "citizenCardNo",
+                  "imageWithCard",
+                  "cardImage",
+                  "bankAccountNo",
+                  "bankAccountImage",
+                ],
+              },
+              include: [
+                {
+                  as: "citizenAddress",
+                  model: Address,
+                },
+                {
+                  as: "currentAddress",
+                  model: Address,
+                },
+                {
+                  model: Bank,
+                },
+              ],
+            },
+          },
+          {
+            model: PostImage,
+          },
+          {
+            model: Package,
+          },
+          {
+            model: SubCategories,
+          },
+        ],
+      });
+      if (post[0]) post[0].instruction = JSON.parse(post[0].instruction);
+
+      return res.status(200).json({ post });
+    }
+
+    // ? If filter by price
+    if (max && min) {
+      const package = await Package.findAll({
+        where: { price: { [Op.between]: [min, max] } },
+      });
+      const postId = package.map((item) => item.postId);
+      const post = await Post.findAll({
+        where: { id: postId },
+        include: [
+          {
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
+            include: {
+              model: FreelanceInfo,
+              attributes: {
+                exclude: [
+                  "citizenCardNo",
+                  "imageWithCard",
+                  "cardImage",
+                  "bankAccountNo",
+                  "bankAccountImage",
+                ],
+              },
+              include: [
+                {
+                  as: "citizenAddress",
+                  model: Address,
+                },
+                {
+                  as: "currentAddress",
+                  model: Address,
+                },
+                {
+                  model: Bank,
+                },
+              ],
+            },
+          },
+          {
+            model: PostImage,
+          },
+          {
+            model: Package,
+          },
+          {
+            model: SubCategories,
+          },
+        ],
+      });
+      if (post[0]) post[0].instruction = JSON.parse(post[0].instruction);
+
+      return res.status(200).json({ post });
+    }
+
+    // ? If filter by duration
+    if (duration) {
+      const package = await Package.findAll({
+        where: { duration: { [Op.lte]: duration } },
+      });
+      const postId = package.map((item) => item.postId);
+      const post = await Post.findAll({
+        where: { id: postId },
+        include: [
+          {
+            model: User,
+            attributes: [
+              "id",
+              "firstName",
+              "lastName",
+              "telephoneNo",
+              "dateOfBirth",
+              "profileImage",
+            ],
+            include: {
+              model: FreelanceInfo,
+              attributes: {
+                exclude: [
+                  "citizenCardNo",
+                  "imageWithCard",
+                  "cardImage",
+                  "bankAccountNo",
+                  "bankAccountImage",
+                ],
+              },
+              include: [
+                {
+                  as: "citizenAddress",
+                  model: Address,
+                },
+                {
+                  as: "currentAddress",
+                  model: Address,
+                },
+                {
+                  model: Bank,
+                },
+              ],
+            },
+          },
+          {
+            model: PostImage,
+          },
+          {
+            model: Package,
+          },
+          {
+            model: SubCategories,
+          },
+        ],
+      });
+      if (post[0]) post[0].instruction = JSON.parse(post[0].instruction);
+
+      return res.status(200).json({ post });
+    }
   } catch (err) {
     next(err);
   }

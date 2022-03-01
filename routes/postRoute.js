@@ -12,12 +12,16 @@ const {
   getPostByCategories,
   getPostBySubCategories,
   toggleIsActivePost,
+  getPostByFilter,
 } = require("../controllers/postController");
 
 const router = express.Router();
 
 // TODO: Get all post
 router.get("/", getAllPost);
+
+// TODO: Get post by filter
+router.get("/filter", getPostByFilter);
 
 // TODO: Get post by id
 router.get("/:id", getPostById);
