@@ -197,7 +197,9 @@ const users = [
   },
 ];
 
-for (let i = 0; i < 10; i++) {
+const maxLoop = 10;
+
+for (let i = 0; i < maxLoop; i++) {
   const firstName = faker.name.firstName();
   const lastName = faker.name.lastName();
   const user = {
