@@ -243,7 +243,7 @@ const maxLoop = 10;
 for (let i = 0; i < maxLoop; i++) {
   for (let j = 1; j < 7; j++) {
     const postImage = {
-      post_id: (Math.random() * (maxPostId - minPostId) + minPostId).toFixed(0),
+      post_id: Math.ceil(Math.random() * (maxPostId - minPostId) + minPostId),
       url: faker.image.business(),
       order: j,
       created_at: new Date(),

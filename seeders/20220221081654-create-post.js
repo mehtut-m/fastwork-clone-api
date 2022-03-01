@@ -99,8 +99,8 @@ const maxLoop = 15;
 
 for (let i = 0; i < maxLoop; i++) {
   const post = {
-    user_id: (Math.random() * (max - min) + min).toFixed(0),
-    sub_category_id: (Math.random() * (maxSub - minSub) + minSub).toFixed(0),
+    user_id: Math.ceil(Math.random() * (max - min) + min),
+    sub_category_id: Math.ceil(Math.random() * (maxSub - minSub) + minSub),
     name: faker.lorem.words(),
     description: faker.lorem.sentence(),
     instruction: JSON.stringify([

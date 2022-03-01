@@ -125,7 +125,7 @@ const minPostId = 5;
 const maxLoop = 40;
 for (let i = 0; i < maxLoop; i++) {
   const gen = {
-    post_id: (Math.random() * (maxPostId - minPostId) + minPostId).toFixed(0),
+    post_id: Math.ceil(Math.random() * (maxPostId - minPostId) + minPostId),
     name: faker.lorem.words(),
     description: faker.lorem.sentence(),
     price: (Math.random() * (10000 - 2500) + 2500).toFixed(0),
