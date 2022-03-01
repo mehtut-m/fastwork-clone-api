@@ -21,7 +21,7 @@ const router = express.Router();
 router.get("/", getAllPost);
 
 // TODO: Get post by filter
-router.get("/filter", getPostByFilter);
+router.get("/filter/:id", getPostByFilter);
 
 // TODO: Get post by id
 router.get("/:id", getPostById);

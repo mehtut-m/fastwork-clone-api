@@ -347,6 +347,11 @@ exports.getPostBySubCategories = async (req, res, next) => {
 exports.getPostByFilter = async (req, res, next) => {
   try {
     const { max, min, duration } = req.query;
+    const { id } = req.params;
+
+    if (typeof id !== "string" || id.trim() === "") {
+      return res.status(400).json({ message: "sub category id is require" });
+    }
 
     // ? If filter by price && duration
     if (max && min && duration) {
@@ -360,7 +365,7 @@ exports.getPostByFilter = async (req, res, next) => {
       });
       const postId = package.map((item) => item.postId);
       const post = await Post.findAll({
-        where: { id: postId },
+        where: { id: postId, subCategoryId: id },
         include: [
           {
             model: User,
@@ -421,7 +426,7 @@ exports.getPostByFilter = async (req, res, next) => {
       });
       const postId = package.map((item) => item.postId);
       const post = await Post.findAll({
-        where: { id: postId },
+        where: { id: postId, subCategoryId: id },
         include: [
           {
             model: User,
@@ -482,7 +487,7 @@ exports.getPostByFilter = async (req, res, next) => {
       });
       const postId = package.map((item) => item.postId);
       const post = await Post.findAll({
-        where: { id: postId },
+        where: { id: postId, subCategoryId: id },
         include: [
           {
             model: User,
