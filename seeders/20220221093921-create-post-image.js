@@ -5,43 +5,71 @@ const { faker } = require("@faker-js/faker");
 const postImages = [
   {
     post_id: 1,
-    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646036642/post1_4_idtcql.jpg",
+    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646284815/post1_1_dk19uv.jpg",
     order: 1,
     created_at: new Date(),
     updated_at: new Date(),
   },
   {
     post_id: 1,
-    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646036642/post1_1_ir4ndv.webp",
+    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646284809/post1_2_ji2vkp.jpg",
     order: 2,
     created_at: new Date(),
     updated_at: new Date(),
   },
   {
     post_id: 1,
-    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646036642/post1_5_naqwgl.jpg",
+    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646284809/post1_3_oreexe.jpg",
     order: 3,
     created_at: new Date(),
     updated_at: new Date(),
   },
   {
     post_id: 1,
-    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646036642/post1_6_alvmii.jpg",
+    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646284809/post1_4_vda7s2.jpg",
     order: 4,
     created_at: new Date(),
     updated_at: new Date(),
   },
   {
     post_id: 1,
-    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646036642/post1_3_jrmwt5.jpg",
+    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646284809/post1_5_u6dlyj.jpg",
     order: 5,
     created_at: new Date(),
     updated_at: new Date(),
   },
   {
     post_id: 1,
-    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646036650/post1_2_fos4vw.jpg",
+    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646284809/post1_6_u8j4si.jpg",
     order: 6,
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+  {
+    post_id: 1,
+    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646284810/post1_7_g6yw70.jpg",
+    order: 7,
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+  {
+    post_id: 1,
+    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646284809/post1_8_js6qbo.jpg",
+    order: 8,
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+  {
+    post_id: 1,
+    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646284810/post1_9_agundh.jpg",
+    order: 9,
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+  {
+    post_id: 1,
+    url: "https://res.cloudinary.com/dzur8dc5e/image/upload/v1646284809/post1_10_gqyvnf.jpg",
+    order: 10,
     created_at: new Date(),
     updated_at: new Date(),
   },
@@ -236,15 +264,13 @@ const postImages = [
   },
 ];
 
-const maxPostId = 20;
-const minPostId = 5;
-const maxLoop = 10;
+const maxLoop = 40;
 
-for (let i = 0; i < maxLoop; i++) {
+for (let i = 7; i < maxLoop; i++) {
   for (let j = 1; j < 7; j++) {
     const postImage = {
-      post_id: Math.ceil(Math.random() * (maxPostId - minPostId) + minPostId),
-      url: faker.image.business(),
+      post_id: i,
+      url: faker.image.image(),
       order: j,
       created_at: new Date(),
       updated_at: new Date(),

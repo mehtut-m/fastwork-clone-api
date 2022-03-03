@@ -195,6 +195,19 @@ const users = [
     created_at: new Date(),
     updated_at: new Date(),
   },
+  {
+    first_name: "Natthaya",
+    last_name: "Pimpaporn",
+    email: "Natthaya@gmail.com",
+    password: bcrypt.hashSync("Natthayapass", 12),
+    role: "FREELANCE",
+    freelance_info_id: 14,
+    telephone_no: "0964476991",
+    date_of_birth: new Date("1990-7-13"),
+    profile_image: faker.image.avatar(),
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
 ];
 
 const maxLoop = 10;

@@ -5,8 +5,8 @@ const { faker } = require("@faker-js/faker");
 const data = [
   {
     post_id: 1,
-    name: "ออกแบบ LOGO 3 ตัวเลือก",
-    description: "ออกแบบชึ้นงานให้เลือก 3 ชิ้น",
+    name: "ออกแบบ LOGO HOUSE Package bronze",
+    description: "มีการออกแบบชั้นงานให้เลือก 3 ชิ้น",
     price: 2000,
     duration: 3,
     revise: 5,
@@ -15,8 +15,8 @@ const data = [
   },
   {
     post_id: 1,
-    name: "ออกแบบ LOGO 5 ตัวเลือก",
-    description: "ออกแบบชึ้นงานให้เลือก 5 ชิ้น",
+    name: "ออกแบบ LOGO HOUSE Package Silver",
+    description: "มีการออกแบบชั้นงานให้เลือก 5 ชิ้น",
     price: 3000,
     duration: 5,
     revise: 5,
@@ -25,8 +25,8 @@ const data = [
   },
   {
     post_id: 1,
-    name: "ออกแบบ LOGO+CL",
-    description: "ออกแบบชึ้นงานให้+CL",
+    name: "ออกแบบ LOGO+CL Package gold",
+    description: "มีการออกแบบชั้นงานให้เลือก+CL",
     price: 10000,
     duration: 5,
     revise: 5,
@@ -35,8 +35,8 @@ const data = [
   },
   {
     post_id: 2,
-    name: "HOT BASIC : Personal/ startup business",
-    description: "ออกแบบโลโก้ 3 แบบ",
+    name: "BASIC : Personal/ startup business",
+    description: "ออกแบบโลโก้ให้เลือก 3 แบบ",
     price: 4500,
     duration: 3,
     revise: 3,
@@ -45,8 +45,8 @@ const data = [
   },
   {
     post_id: 2,
-    name: "GOLD! : Unlimited revisions.",
-    description: "ออกแบบโลโก้ 5 แบบ Profile Picture Facebook and Cover",
+    name: "Medium : Unlimited revisions.",
+    description: "ออกแบบโลโก้ให้เลือก 5 แบบ Profile Picture Facebook and Cover",
     price: 5600,
     duration: 3,
     revise: 3,
@@ -55,9 +55,9 @@ const data = [
   },
   {
     post_id: 2,
-    name: "DIAMOND! : Branding Professional Business",
+    name: "Advance : Branding Professional Business",
     description:
-      "ออกแบบโลโก้ 5 แบบ Brandbook 1 เล่ม Business Card Profile Picture-Cover letterhead- Envelope",
+      "ออกแบบโลโก้ให้เลือก 5 แบบ และมี Brandbook ให้ 1 เล่ม ใน Brandbook มี 8 หน้า",
     price: 18000,
     duration: 7,
     revise: 3,
@@ -118,23 +118,57 @@ const data = [
     created_at: new Date(),
     updated_at: new Date(),
   },
-];
-
-const maxPostId = 20;
-const minPostId = 5;
-const maxLoop = 40;
-for (let i = 0; i < maxLoop; i++) {
-  const gen = {
-    post_id: Math.ceil(Math.random() * (maxPostId - minPostId) + minPostId),
-    name: faker.lorem.words(),
-    description: faker.lorem.sentence(),
-    price: (Math.random() * (10000 - 2500) + 2500).toFixed(0),
-    duration: (Math.random() * (10 - 3) + 3).toFixed(0),
-    revise: (Math.random() * (8 - 2) + 2).toFixed(0),
+  {
+    post_id: 6,
+    name: "Package [♡Logo♡]",
+    description:
+      "- ออกแบบโลโก้ตาม Concept 3 รูปแบบ ให้ลูกค้าพิจารณาแบบ สามารถ Develop ได้ 1 ครั้ง - หลังจาก Develop สามารถแก้ไขได้ 3 ครั้ง (ครั้งถัดไป +100 ต่อครั้ง) - ไฟล์ที่ลูกค้าจะได้รับ .ai .PNG .JPG ( .ai สำหรับแก้ไขเพิ่มเติม หรือนำไปจัดทำ Artwork ในส่วนงานอื่นๆ .JPG สำหรับเป็นไฟล์ภาพโปรไฟล์ .PNG ที่มีพื้นหลังโปร่งใส) ♡ กรณีปรับโทนสีเพิ่มเติม +เพิ่ม 300.- ต่อไฟล์ ♡ กรณีเพิ่มไฟล์ตรายาง [ขาว-ดำ] หรือ รับ 2 ภาษา+เพิ่ม 500.- ♡ กรณีต้องการ 2 รูปแบบ +เพิ่ม 700.- ♡ กรณีปรับเปลี่ยน Concept +เพิ่ม 1,000.-",
+    price: 1800,
+    duration: 3,
+    revise: 3,
     created_at: new Date(),
     updated_at: new Date(),
-  };
-  data.push(gen);
+  },
+  {
+    post_id: 6,
+    name: "Logo + แพ็กเกจเสริม [ไฟล์ตรายาง]",
+    description:
+      "♡ ไฟล์ตรายาง ได้รับไฟล์ .ai สำหรับแก้ไขเพิ่มเติม หรือนำไปจัดทำ Artwork ในส่วนงานอื่นๆ, .PNG ที่มีพื้นหลังโปร่งใส) รายละเอียดราคาเพิ่มเติม แพ็กเกจเสริม ♡ FB COVER (ปกแฟนเพจ) +เพิ่ม 500.- ♡ Profile (ภาพโปรไฟล์) +เพิ่ม 500.- ♡ Ads.Online (1 ภาพ) +เพิ่ม 700.- ♡ ออกแบบฉลาก/สติ๊กเกอร์/ซอง 1 แบบ +เพิ่ม 990.- ♡ Infographic 1 แบบ +เพิ่ม 1,000.- ♡ แผนที่ 1 แบบ +เพิ่ม 1,000.- ♡ กล่องบรรจุภัณฑ์ 1 แบบ +เพิ่ม 1,900.-",
+    price: 2300,
+    duration: 3,
+    revise: 3,
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+  {
+    post_id: 6,
+    name: "Logo + แพ็กเกจเสริม [ภาษาไทย/อังกฤษ]",
+    description:
+      "♡ Logo เพิ่มการปรับภาษา ไทย/อังกฤษ ได้รับไฟล์ .ai สำหรับแก้ไขเพิ่มเติม หรือนำไปจัดทำ Artwork ในส่วนงานอื่นๆ, .PNG ที่มีพื้นหลังโปร่งใส)",
+    price: 2300,
+    duration: 3,
+    revise: 3,
+    created_at: new Date(),
+    updated_at: new Date(),
+  },
+];
+
+const minPostId = 7;
+
+for (let i = minPostId; i < 38; i++) {
+  for (let j = 0; j < 3; j++) {
+    const gen = {
+      post_id: i + j,
+      name: faker.lorem.words(),
+      description: faker.lorem.sentence(),
+      price: (Math.random() * (10000 - 2500) + 2500).toFixed(0),
+      duration: (Math.random() * (10 - 3) + 3).toFixed(0),
+      revise: (Math.random() * (8 - 2) + 2).toFixed(0),
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+    data.push(gen);
+  }
 }
 
 module.exports = {
