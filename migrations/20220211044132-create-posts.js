@@ -39,7 +39,7 @@ module.exports = {
         // allowNull: false,
       },
       description: {
-        type: Sequelize.DataTypes.STRING,
+        type: Sequelize.DataTypes.STRING(1234),
       },
       instruction: {
         type: Sequelize.DataTypes.TEXT,

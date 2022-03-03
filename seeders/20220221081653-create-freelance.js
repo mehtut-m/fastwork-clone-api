@@ -258,6 +258,25 @@ module.exports = {
         created_at: new Date(),
         updated_at: new Date(),
       },
+      {
+        user_id: 17,
+        first_name: "Natthaya",
+        last_name: "Pimpaporn",
+        display_name: "Barlow",
+        profile_desc:
+          "ฉันชื่อนิงค์เรียบจบ Fine Art ศิลปกรรมออกแบบนิเทศศิลป์ ประสบการณ์ทำงานมากกว่า 10 ปี ปัจจุบันทำอาชีพนักออกแบบอัตลักษณ์, บรรจุภัณฑ์, ศึกษาต่ออยู่ที่แคนาดาและเป็นเจ้าของธุรกิจ ecommerce I have over 10 years of experience as a creative designer specializing in branding, CI & product packaging design.",
+        citizen_card_no: "1004459902112",
+        citizen_address_id: 14,
+        current_address_id: 14,
+        image_with_card: "https://picsum.photos/id/149/200/300",
+        card_image: "https://picsum.photos/id/44/200/300",
+        bank_id: 2,
+        bank_account_no: "219941885",
+        bank_account_image: "https://picsum.photos/id/99/200/300",
+        status: "APPROVE",
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
     ]);
   },
 
