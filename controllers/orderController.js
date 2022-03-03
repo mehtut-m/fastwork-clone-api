@@ -67,6 +67,9 @@ exports.getOrderByStatusFromFreelance = async (req, res, next) => {
             "profileImage",
           ],
         },
+        {
+          model: OrderImage,
+        },
       ],
     });
 
@@ -113,6 +116,9 @@ exports.getOrderByStatusFromUser = async (req, res, next) => {
         {
           model: Post,
         },
+        {
+          model: OrderImage,
+        },
       ],
     });
 
@@ -148,6 +154,9 @@ exports.getOrderById = async (req, res, next) => {
               "profileImage",
             ],
           },
+        },
+        {
+          model: OrderImage,
         },
       ],
     });
